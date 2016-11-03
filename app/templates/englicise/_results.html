@@ -1,0 +1,70 @@
+<!-- div class="page-header">
+    <h3>Exercise In Progress</h3>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr class="">
+              <th>#</th>
+              <th>Total</th>
+              <th>Progress</th>
+              <th>Start</th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if exercises %}
+            {% for exercise in exercises %}
+                {% if not exercise.finish %}
+                <tr>
+                    <td>{{ exercise.id }}</td>
+                    <td>{{ exercise.total }}</td>
+                    <td>{{ exercise.current }}</td>
+                    <td>{{ moment(exercise.start).fromNow() }}</td>
+                    <td><a href="{{ url_for('.exercise_result', id=exercise.id) }}">
+                        <span class="glyphicon glyphicon-play"></span>
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div -->
+<div class="page-header">
+    <h3>All Exercise Results</h3>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr class="">
+              <th>#</th>
+              <th>Total</th>
+              <th>Correct</th>
+              <th>Start</th>
+              <th>Finish</th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if exercises %}
+            {% for exercise in exercises %}
+                {% if exercise.finish %}
+                <tr>
+                    <td>{{ exercise.id }}</td>
+                    <td>{{ exercise.total }}</td>
+                    <td>{{ exercise.correct }}</td>
+                    <td>{{ moment(exercise.start).fromNow() }}</td>
+                    <td>{{ moment(exercise.finish).fromNow() }}</td>
+                    <td><a href="{{ url_for('.exercise_result', id=exercise.id) }}">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>

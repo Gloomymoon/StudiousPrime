@@ -1,0 +1,21 @@
+{% extends "englicise/base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Englicise Exercise Results{% endblock %}
+
+{% block page_content %}
+
+<div>
+{% include 'englicise/_results.html' %}
+</div>
+
+{% if exercises and pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.exercise_result') }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

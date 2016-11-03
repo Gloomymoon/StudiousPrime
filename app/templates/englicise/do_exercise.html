@@ -1,0 +1,51 @@
+{% extends "englicise/base.html" %}
+
+{% block title %}Studious Prime{% endblock %}
+
+{% block flash_content %}
+    <div class="progress">
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:{{ question.exercise.current / question.exercise.total * 100}}%">
+            <span class="sr-only"></span><span class="pull-right">{{ question.exercise.current }}&nbsp;</span>
+        </div>
+        <div class="progress-bar" ><span class="text-primary">&nbsp;{{ question.exercise.total - question.exercise.current }}</span></div>
+    </div>
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="">
+        <!-- p>{% if question %}Exercise #{{ question.exc_id}} Question #{{ question.index + 1}}{% endif %}</p -->
+    </div>
+        <form class="form-horizontal text-center" method="post" id="question">
+            {{ form.hidden_tag() }}
+                {{ form.word_mask(class="form-control text-center")}}
+                <h1>{{ question.word.chinese }}</h1>
+                <ul>
+                    {% if question and question.word and question.word.example %}
+                    {% for e in question.word.example.split(';') %}
+                        <li><p>e</p></li>
+                    {% endfor %}
+                    {% endif %}
+                </ul>
+                <hr />
+                <div class="">
+                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </div>
+        </form>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='vendor/jquery.inputmask.bundle.min.js')}}"></script>
+    <script>
+        $(function(){
+            $('#word_mask').inputmask({
+                mask: "{{ question.word_mask }}",
+                clearMaskOnLostFocus: false
+            }).focus()
+        });
+    </script>
+
+{% endblock %}

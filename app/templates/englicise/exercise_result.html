@@ -1,0 +1,43 @@
+{% extends "englicise/base.html" %}
+
+{% block title %}Englicise Exercise Result{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h3>{% if exercise %}Exercise #{{ exercise.id }}{% endif %} Result
+        <span class="pull-right">
+            <a href="{{ url_for('englicise.exercise_results') }}" class="btn btn-primary" role="button">View All Results</a>
+        </span>
+        </h3>
+    </div>
+    <div class="row">
+        <h1 class="text-center score">{{ exercise.correct }} / {{ exercise.total}}</h1text-center>
+    </div>
+    <div class="table-responsive">
+        <h3>Errors</h3>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+              <th>#</th>
+              <th>Chinese</th>
+              <th>Question</th>
+              <th>Your answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if exercise %}
+            {% for question in exercise.questions %}
+            {% if question.result != 1 %}
+                <tr>
+                    <td>{{ question.index + 1 }}</td>
+                    <td>{{ question.chinese }}</td>
+                    <td>{{ question.english }}</td>
+                    <td>{{ question.answer_highlight | safe }}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

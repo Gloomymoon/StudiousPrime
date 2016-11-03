@@ -1,0 +1,27 @@
+{% extends "englicise/base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Englicise Words List{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h3>All Words
+        <span class="pull-right">
+        <a href="{{ url_for('englicise.add_word') }}" class="btn btn-primary" role="button">New Word</a>
+        </span>
+    </h3>
+</div>
+<div>
+{% include 'englicise/_words.html' %}
+</div>
+
+{% if words and pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.words') }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}
