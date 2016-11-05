@@ -1,6 +1,6 @@
 # StudiousPrime
 
-### version0.2
+### version 0.2
 updated 2016-11-05
 
 1 增加Achievements页面
