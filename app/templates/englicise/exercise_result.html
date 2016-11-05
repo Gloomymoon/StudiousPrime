@@ -30,7 +30,7 @@
             {% if question.result != 1 %}
                 <tr>
                     <td>{{ question.index + 1 }}</td>
-                    <td>{{ question.chinese }}</td>
+                    <td>{{ question.word.chinese }}</td>
                     <td>{{ question.english }}</td>
                     <td>{{ question.answer_highlight | safe }}</td>
                 </tr>

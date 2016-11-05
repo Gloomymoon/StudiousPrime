@@ -16,7 +16,7 @@
         {% for word in words %}
             <tr>
                 <td>{{ word.id }}</td>
-                <td>{{ word.english }}</td>
+                <td><a href="{{ url_for('.edit_word', id=word.id) }}">{{ word.english }}</a></td>
                 <td>{{ word.chinese }}</td>
                 <td>{{ word.example }}</td>
                 <td>{{ moment(word.create).fromNow() }}</td>
