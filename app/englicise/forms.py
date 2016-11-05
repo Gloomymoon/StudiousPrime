@@ -19,7 +19,7 @@ class NewWordForm(FlaskForm):
 
     def validate_english(self, field):
         if EnglishWord.query.filter_by(english=field.data).first():
-            raise ValidationError('English word [' + self.name + '] already added.')
+            raise ValidationError('English word [' + field.data + '] already added.')
 
 
 class EditWordForm(FlaskForm):
@@ -37,9 +37,13 @@ class EditWordForm(FlaskForm):
     def validate_english(self, field):
         w = EnglishWord.query.filter_by(english=field.data).all()
         if len(w) > 1:
-            raise ValidationError('English word [' + self.name + '] already existed.')
+            raise ValidationError('English word [' + field.data + '] already existed.')
 
 
 class QuestionForm(FlaskForm):
     word_mask = StringField('', validators=[Required()])
     submit = SubmitField('Next')
+
+    def validate_word_mask(self, field):
+        if '_' in field.data:
+            raise ValidationError('Please fill all the blank.')

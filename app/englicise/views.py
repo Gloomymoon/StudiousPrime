@@ -4,13 +4,15 @@ from flask_login import login_required, current_user
 from . import englicise
 from app import db
 from .forms import NewWordForm, EditWordForm, QuestionForm
-from .models import EnglishWord, EnglishWordScore, EnglishExercise, EnglishQuestion, EnglishBook
+from .models import EnglishWord, EnglishWordScore, EnglishExercise, EnglishQuestion, EnglishBook, EnglishStatistic
 
 
 @englicise.route('/')
 @login_required
 def index():
-    return render_template('englicise/index.html')
+    words = EnglishStatistic.wrong_words(current_user.id, 5)
+    return render_template('englicise/index.html', words=words)
+
 
 @englicise.route('/add-word', methods=['GET', 'POST'])
 @login_required
@@ -128,8 +130,6 @@ def evaluate(id):
             if question.result == 1:
                 correct += 1
                 ws.score += 1
-            else:
-                ws.score = max(0, ws.score - 1)
             db.session.add(ws)
         exercise.correct = correct
         exercise.finish = datetime.utcnow()
@@ -158,4 +158,5 @@ def exercise_result(id):
 @englicise.route('/achievements')
 @login_required
 def achievements():
-    return 'Cong.'
+    achievements = EnglishStatistic.achievements(current_user.id)
+    return render_template('englicise/achievements.html', achievements=achievements)

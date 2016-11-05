@@ -31,4 +31,7 @@ def create_app(config_name):
     from .englicise import englicise as englicise_blueprint
     app.register_blueprint(englicise_blueprint, url_prefix='/e')
 
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix='/api')
+
     return app

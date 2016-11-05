@@ -1,5 +1,6 @@
 import random
 from flask import current_app
+from sqlalchemy import func, distinct, case
 from datetime import datetime
 from app import db
 from utilities import word_mask, word_strong
@@ -22,6 +23,7 @@ class EnglishWord(db.Model):
     create = db.Column(db.DateTime(), default=datetime.utcnow)
     update = db.Column(db.DateTime(), default=datetime.utcnow)
     questions = db.relationship('EnglishQuestion', backref=db.backref('word', lazy='joined'), lazy='dynamic')
+    scores = db.relationship('EnglishWordScore', backref=db.backref('word', lazy='joined'), lazy='dynamic')
 
 
 class EnglishWordScore(db.Model):
@@ -44,6 +46,29 @@ class EnglishWordScore(db.Model):
             target.level = 4
         else:
             target.level = 5
+
+    @staticmethod
+    def random_word(user_id, level):
+        q = EnglishWordScore.query.filter_by(user_id=user_id)
+        ws = None
+        level = level
+        while not ws and level <= 5:
+            ws = random.sample(q.filter_by(level=level).all(), 1)[0]
+            level += 1
+        return ws
+
+    def to_json(self):
+        json_wordscore = {
+            'word_id': self.word_id,
+            'user_id': self.user_id,
+            'english': self.word.english,
+            'chinese': self.word.chinese,
+            'example': self.word.example,
+            'score': self.score,
+            'level': self.level,
+            'update': self.update
+        }
+        return json_wordscore
 
 
 class EnglishQuestion(db.Model):
@@ -103,3 +128,62 @@ class EnglishExercise(db.Model):
 
 
 db.event.listen(EnglishWordScore.score, 'set', EnglishWordScore.on_changed_score)
+
+
+class EnglishStatistic():
+
+    @staticmethod
+    def wrong_words(user_id, number):
+        wq = db.session.query(EnglishQuestion.word_id.label('word_id'), func.count(EnglishQuestion.index).label('count'))\
+            .join(EnglishQuestion.exercise)\
+            .filter(EnglishExercise.user_id==user_id)\
+            .filter(EnglishQuestion.result < 1).group_by(EnglishQuestion.word_id)\
+            .filter(EnglishExercise.finish > '1800-01-01')\
+            .order_by(func.count(EnglishQuestion.index).desc()).limit(number).all()
+        w = EnglishWord.query.filter(EnglishWord.id.in_((x.word_id for x in wq))).all()
+        return w
+
+    @staticmethod
+    def achievements(user_id):
+        ae = db.session.query(func.count(EnglishExercise.id).label('TotalExercises'),
+                              func.sum(EnglishExercise.total).label('TotalQuestions'),
+                              func.sum(EnglishExercise.correct).label('TotalCorrects'),
+                              func.sum(case([(EnglishExercise.correct == EnglishExercise.total, 1)], else_=0)).label(
+                                  'TotalFullScore'),
+                              func.max(EnglishExercise.finish).label('LastFinish'),
+                              func.max(EnglishExercise.correct).label('HighestCorrect'),
+                              ) \
+            .filter(EnglishExercise.user_id == user_id) \
+            .filter(EnglishExercise.finish > '1800-01-01').first()
+        aq = db.session.query(func.count(distinct(EnglishQuestion.word_id)).label('TotalTestWords'),
+                              ).join(EnglishQuestion.exercise).filter(EnglishExercise.user_id == user_id) \
+            .filter(EnglishExercise.finish > '1800-01-01').first()
+        aq2 = db.session.query(func.count(distinct(EnglishQuestion.word_id)).label('TotalCorrectWords')
+                               ).join(EnglishQuestion.exercise) \
+            .filter(EnglishExercise.user_id == user_id) \
+            .filter(EnglishExercise.finish > '1800-01-01') \
+            .filter(EnglishQuestion.result > 0).first()
+        aq3 = db.session.query(EnglishQuestion.english, func.count(EnglishQuestion.index).label('count')) \
+            .join(EnglishQuestion.exercise) \
+            .filter(EnglishExercise.user_id == user_id) \
+            .filter(EnglishQuestion.result < 1).group_by(EnglishQuestion.english) \
+            .filter(EnglishExercise.finish > '1800-01-01') \
+            .order_by(func.count(EnglishQuestion.index).desc()).limit(5).all()
+        aws = db.session.query(EnglishWordScore.level.label("level"), func.count(EnglishWordScore.word_id).label('count')) \
+            .filter(EnglishWordScore.user_id == user_id) \
+            .group_by(EnglishWordScore.level).order_by(EnglishWordScore.level.desc()).all()
+        aws2 = db.session.query(func.count(EnglishWordScore.word_id).label('TotalWords')).filter(
+            EnglishWordScore.user_id == user_id).first()
+        achievements = {'TotalExercises': ae.TotalExercises,
+                        'TotalQuestions': ae.TotalQuestions,
+                        'TotalCorrects': ae.TotalCorrects,
+                        'TotalFullScore': ae.TotalFullScore,
+                        'LastFinish': ae.LastFinish,
+                        'HighestCorrect': ae.HighestCorrect,
+                        'TotalTestWords': aq.TotalTestWords,
+                        'TotalCorrectWords': aq2.TotalCorrectWords,
+                        'WrongWords': aq3,
+                        'WordScores': aws,
+                        'TotalWords': aws2.TotalWords
+                        }
+        return achievements

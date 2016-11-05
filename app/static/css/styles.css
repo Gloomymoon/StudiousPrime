@@ -26,3 +26,28 @@
 .score {
     font-size: 400%;
 }
+
+.bs-glyphicons .glyphicon {
+    font-size: 24px;
+}
+
+.bs-glyphicons td {
+    vertical-align: middle!important;
+}
+
+.jumbotron {
+    background-color: #fff;
+}
+
+.caption h3 {
+    margin: 5px 0;
+}
+
+.bs-callout {
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
