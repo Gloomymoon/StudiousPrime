@@ -46,4 +46,5 @@ class QuestionForm(FlaskForm):
 
     def validate_word_mask(self, field):
         if '_' in field.data:
-            raise ValidationError('Please fill all the blank.')
+            field.data = ''
+            raise ValidationError('Please fill in all the blanks.')
