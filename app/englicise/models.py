@@ -1,6 +1,6 @@
 import random
 from flask import current_app
-from sqlalchemy import func, distinct, case
+from sqlalchemy import func, distinct, case, sql
 from datetime import datetime
 from app import db
 from utilities import word_mask, word_strong
@@ -119,10 +119,10 @@ class EnglishExercise(db.Model):
             w = EnglishWord.query.filter_by(id=q['word_id']).first()
             question = EnglishQuestion(index=index, exc_id=self.id, word_id=q['word_id'], english=w.english, word_mask=word_mask(w.english))
             db.session.add(question)
-            db.session.add(self)
         db.session.commit()
         result = EnglishQuestion.query.filter_by(exc_id=self.id).all()
         self.total = len(result)
+        db.session.add(self)
         db.session.commit()
         return self.total
 
@@ -145,13 +145,14 @@ class EnglishStatistic():
 
     @staticmethod
     def achievements(user_id):
+        val1 = sql.expression.literal_column("1.0")
         ae = db.session.query(func.count(EnglishExercise.id).label('TotalExercises'),
                               func.sum(EnglishExercise.total).label('TotalQuestions'),
                               func.sum(EnglishExercise.correct).label('TotalCorrects'),
                               func.sum(case([(EnglishExercise.correct == EnglishExercise.total, 1)], else_=0)).label(
                                   'TotalFullScore'),
                               func.max(EnglishExercise.finish).label('LastFinish'),
-                              func.max(EnglishExercise.correct).label('HighestCorrect'),
+                              func.max((EnglishExercise.correct * val1 / EnglishExercise.total)).label('HighestCorrect'),
                               ) \
             .filter(EnglishExercise.user_id == user_id) \
             .filter(EnglishExercise.finish > '1800-01-01').first()
@@ -171,7 +172,7 @@ class EnglishStatistic():
             .order_by(func.count(EnglishQuestion.index).desc()).limit(5).all()
         aws = db.session.query(EnglishWordScore.level.label("level"), func.count(EnglishWordScore.word_id).label('count')) \
             .filter(EnglishWordScore.user_id == user_id) \
-            .group_by(EnglishWordScore.level).order_by(EnglishWordScore.level.desc()).all()
+            .group_by(EnglishWordScore.level).order_by(EnglishWordScore.level.asc()).all()
         aws2 = db.session.query(func.count(EnglishWordScore.word_id).label('TotalWords')).filter(
             EnglishWordScore.user_id == user_id).first()
         achievements = {'TotalExercises': ae.TotalExercises,

@@ -31,11 +31,11 @@
                 </tr>
                 <tr>
                     <td class="text-center"><span class="glyphicon glyphicon-filter"></span></td>
-                    <td class="text-center">{{ "%2.1f" % (achievements.TotalCorrects / achievements.TotalExercises) }} /
+                    <td class="text-center"><!-- {{ "%2.1f" % (achievements.TotalCorrects / achievements.TotalExercises) }} / -->
                         {{
                         "%2.1f" % (achievements.TotalCorrects / achievements.TotalQuestions * 100)}}%
                     </td>
-                    <td>Average score / Accuracy</td>
+                    <td>Average <!-- score / -->Accuracy</td>
                 </tr>
                 <tr>
                     <td class="text-center"><span class="glyphicon glyphicon-thumbs-up"></span></td>
@@ -44,8 +44,8 @@
                 </tr>
                 <tr>
                     <td class="text-center"><span class="glyphicon glyphicon-sort-by-attributes-alt"></span></td>
-                    <td class="text-center">{{ achievements.HighestCorrect }}</td>
-                    <td>Highest score ever</td>
+                    <td class="text-center">{{ "%2.1f" % (achievements.HighestCorrect * 100) }}%</td>
+                    <td>Highest accuracy ever</td>
                 </tr>
                 </tbody>
             </table>
