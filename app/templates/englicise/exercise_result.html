@@ -4,12 +4,14 @@
 
 {% block page_content %}
     <div class="page-header">
-        <h3>{% if exercise %}Exercise #{{ exercise.id }}{% endif %} Result
-        <span class="pull-right">
-            <a href="{{ url_for('englicise.exercise_results') }}" class="btn btn-primary" role="button">View All Results</a>
+        <span class="">
+            <a href="{{ url_for('englicise.exercise_results') }}" class="btn btn-primary" role="button">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                View All Results</a>
         </span>
-        </h3>
+
     </div>
+    <h3>{% if exercise %}Exercise #{{ exercise.id }}{% endif %}</h3>
     <div class="row">
         <h1 class="text-center score">{{ exercise.correct }} / {{ exercise.total}}</h1text-center>
     </div>

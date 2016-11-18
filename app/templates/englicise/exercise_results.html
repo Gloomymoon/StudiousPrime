@@ -4,9 +4,40 @@
 {% block title %}Englicise Exercise Results{% endblock %}
 
 {% block page_content %}
-
-<div>
-{% include 'englicise/_results.html' %}
+<div class="col-xs-12 col-md-9">
+    <h3>All Exercise Results</h3>
+<div class="table-responsive panel panel-default">
+    <!-- div class="panel-heading">All Exercise Results</div -->
+    <table class="table table-hover">
+        <thead>
+            <tr class="">
+              <th>#</th>
+              <th>Total</th>
+              <th>Correct</th>
+              <th>Date</th>
+              <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if exercises %}
+            {% for exercise in exercises %}
+                {% if exercise.finish %}
+                <tr data-href="{{ url_for('.exercise_result', id=exercise.id) }}">
+                    <td>{{ exercise.id }}</td>
+                    <td>{{ exercise.total }}</td>
+                    <td>{{ exercise.correct }}</td>
+                    <td>{{ moment(exercise.start).fromNow() }}</td>
+                    <td>{{ (str(exercise.finish - exercise.start).split('.')[0]) }}</td>
+                    <!-- td><a href="{{ url_for('.exercise_result', id=exercise.id) }}">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                    </td -->
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
 </div>
 
 {% if exercises and pagination %}
@@ -14,8 +45,17 @@
     {{ macros.pagination_widget(pagination, '.exercise_results') }}
 </div>
 {% endif %}
+</div>
+
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
+<script>
+$(document).ready(function() {
+    $("tbody tr").click(function(){
+        location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname);
+    });
+});
+</script>
 {% endblock %}

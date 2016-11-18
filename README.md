@@ -1,5 +1,16 @@
 # StudiousPrime
 
+### version 0.3
+updated 2016-11-18
+
+1 修改了部分config，使用本地jquery和boostrap css库
+
+2 修改了部分页面细节样式，优化列表的点击，返回按钮能够返回之前浏览的分页
+
+3 去除了单词的Book_id关联，question增加level属性
+
+4 增加了首页累计成绩图
+
 ### version 0.2
 updated 2016-11-05
 

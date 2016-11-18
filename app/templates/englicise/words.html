@@ -4,15 +4,45 @@
 {% block title %}Englicise Words List{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
     <h3>All Words
         <span class="pull-right">
-        <a href="{{ url_for('englicise.add_word') }}" class="btn btn-primary" role="button">New Word</a>
+        <a id="btnNew" href="{{ url_for('englicise.add_word') }}" class="btn btn-primary" role="button">
+            <span class="glyphicon glyphicon-plus"></span>
+            New Word
+        </a>
         </span>
     </h3>
-</div>
-<div>
-{% include 'englicise/_words.html' %}
+<div class="table-responsive panel panel-default">
+<table class="table table-hover">
+    <thead>
+        <tr class="">
+          <th>#</th>
+          <th>English</th>
+          <th>Chinese</th>
+          <th>Example</th>
+          <th>Create</th>
+          <th>Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if words %}
+        {% for word in words %}
+            <tr data-href="{{ url_for('.edit_word', id=word.id) }}">
+                <td>{{ word.id }}</td>
+                <td>{{ word.english }}</td>
+                <td>{{ word.chinese }}</td>
+                <td>{{ word.example }}</td>
+                <td>{{ moment(word.create).fromNow() }}</td>
+                <td>{{ moment(word.update).fromNow() }}</td>
+                <!-- td><a href="{{ url_for('.edit_word', id=word.id) }}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </td -->
+            </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
 </div>
 
 {% if words and pagination %}
@@ -24,4 +54,12 @@
 
 {% block scripts %}
 {{ super() }}
+<script>
+$(document).ready(function() {
+    $("tbody tr").click(function(){
+        location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname + location.search);
+    });
+    $("#btnNew").attr("href", $("#btnNew").attr("href")+"?back=" + encodeURIComponent(location.pathname + location.search));
+});
+</script>
 {% endblock %}

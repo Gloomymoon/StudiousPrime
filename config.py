@@ -7,9 +7,10 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a rather very hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    BOOTSTRAP_SERVE_LOCAL = True
     ATH_ADMIN = os.environ.get('ATH_ADMIN')
     QUESTIONS_PER_EXERCISE = 25
-    QUESTIONS_PER_LEVEL = [0, 10, 5, 5, 5, 0]   # question numbers by every level from 0 to 5
+    QUESTIONS_PER_LEVEL = [0, 15, 5, 3, 2, 0]   # question numbers by every level from 0 to 5
     WORDS_PER_PAGE = 10
     EXERCISES_PER_PAGE = 10
 

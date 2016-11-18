@@ -10,7 +10,12 @@ from .models import Permission
 def inject_permissions():
     return dict(Permission=Permission)
 
+
 @main.app_context_processor
 def inject_enumerate():
     return dict(enumerate=enumerate)
 
+
+@main.app_context_processor
+def inject_str():
+    return dict(str=str)

@@ -6,17 +6,35 @@ from app import db
 from utilities import word_mask, word_strong
 
 
+class EnglishSetting(db.Model):
+    __tablename__ = 'english_settings'
+    category = db.Column(db.String(64), primary_key=True)
+    key = db.Column(db.String(64), primary_key=True)
+    value = db.Column(db.String(64))
+
+
+class EnglishBookWords(db.Model):
+    __tablename__ = 'english_bookwords'
+    word_id = db.Column(db.Integer, db.ForeignKey('english_words.id'), primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('english_books.id'), primary_key=True)
+    lesson = db.Column(db.Integer, default=0)
+
+
 class EnglishBook(db.Model):
     __tablename__ = 'english_books'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(200))
-    words = db.relationship('EnglishWord', backref=db.backref('book', lazy='joined'), lazy='dynamic')
+    words = db.relationship('EnglishBookWords',
+                            foreign_keys=[EnglishBookWords.book_id],
+                            backref=db.backref('books', lazy='joined'),
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
 
 
 class EnglishWord(db.Model):
     __tablename__ = 'english_words'
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('english_books.id'), index=True)
+    #book_id = db.Column(db.Integer, db.ForeignKey('english_books.id'), index=True)
     english = db.Column(db.String(64), index=True)
     chinese = db.Column(db.String(200))
     example = db.Column(db.String(2000))
@@ -24,6 +42,11 @@ class EnglishWord(db.Model):
     update = db.Column(db.DateTime(), default=datetime.utcnow)
     questions = db.relationship('EnglishQuestion', backref=db.backref('word', lazy='joined'), lazy='dynamic')
     scores = db.relationship('EnglishWordScore', backref=db.backref('word', lazy='joined'), lazy='dynamic')
+    books = db.relationship('EnglishBookWords',
+                            foreign_keys=[EnglishBookWords.word_id],
+                            backref=db.backref('words', lazy='joined'),
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
 
 
 class EnglishWordScore(db.Model):
@@ -42,7 +65,7 @@ class EnglishWordScore(db.Model):
             target.level = 2
         elif value <= 6:
             target.level = 3
-        elif value <= 9:
+        elif value <= 8:
             target.level = 4
         else:
             target.level = 5
@@ -77,6 +100,7 @@ class EnglishQuestion(db.Model):
     exc_id = db.Column(db.Integer, db.ForeignKey('english_exercises.id'), index=True, primary_key=True)
     word_id = db.Column(db.Integer, db.ForeignKey('english_words.id'))
     english = db.Column(db.String(64))
+    level = db.Column(db.Integer, default=0)
     word_mask = db.Column(db.String(200))
     answer = db.Column(db.String(64))
     result = db.Column(db.Integer)
@@ -116,8 +140,8 @@ class EnglishExercise(db.Model):
                 current_level += -1
         questions.sort(key=lambda obj:obj.get('order'))
         for index, q in enumerate(questions):
-            w = EnglishWord.query.filter_by(id=q['word_id']).first()
-            question = EnglishQuestion(index=index, exc_id=self.id, word_id=q['word_id'], english=w.english, word_mask=word_mask(w.english))
+            w = EnglishWordScore.query.filter_by(user_id=self.user_id).filter_by(word_id=q['word_id']).first()
+            question = EnglishQuestion(index=index, exc_id=self.id, word_id=q['word_id'], english=w.word.english, word_mask=word_mask(w.word.english), level=w.level)
             db.session.add(question)
         db.session.commit()
         result = EnglishQuestion.query.filter_by(exc_id=self.id).all()
@@ -131,7 +155,6 @@ db.event.listen(EnglishWordScore.score, 'set', EnglishWordScore.on_changed_score
 
 
 class EnglishStatistic():
-
     @staticmethod
     def wrong_words(user_id, number):
         wq = db.session.query(EnglishQuestion.word_id.label('word_id'), func.count(EnglishQuestion.index).label('count'))\
@@ -188,3 +211,25 @@ class EnglishStatistic():
                         'TotalWords': aws2.TotalWords
                         }
         return achievements
+
+
+class EnglishSummary(db.Model):
+    __tablename__ = 'english_summary'
+    user_id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, primary_key=True)
+    total = db.Column(db.Integer)
+    correct = db.Column(db.Integer)
+    duration = db.Column(db.Integer)
+    count = db.Column(db.Integer)
+
+    def to_json(self):
+        json_summary = {
+            'user_id': self.user_id,
+            'date': self.date,
+            'total': self.total,
+            'correct': self.correct,
+            'duration': self.duration,
+            'count': self.count,
+            'accuracy': "%2.1f" % (self.correct / self.total * 100),
+        }
+        return json_summary

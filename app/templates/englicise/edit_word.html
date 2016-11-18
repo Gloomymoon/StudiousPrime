@@ -4,11 +4,18 @@
 {% block title %}Englicise Edit Word{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h3>Edit Word</h3>
-</div>
-<div>
-    {{ wtf.quick_form(form) }}
+<div class="col-md-6">
+    <div class="page-header">
+        <h3>Edit Word
+            <span class="pull-right">
+            <a id="btnBack" href="{{ back_href }}" class="btn btn-default" role="button">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                Back
+            </a>
+            </span>
+        </h3>
+    </div>
+    {{ wtf.quick_form(form, button_map={'submit':'primary'}) }}
 </div>
 {% endblock %}
 

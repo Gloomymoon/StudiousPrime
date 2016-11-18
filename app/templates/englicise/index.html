@@ -9,7 +9,9 @@
     <h1 id="english"></h1>
     <h2 id="chinese"></h2>
     <p id="example"></p>
-    <p class="pull-right"><a id="next" class="btn btn-primary btn-lg" href="#" role="button">Next</a></p>
+    <p class="pull-right"><a id="next" class="btn btn-primary btn-lg" href="#" role="button">
+        <span class="glyphicon glyphicon-refresh"></span>
+            Next</a></p>
 </div>
 <hr />
 <div class="row">
@@ -31,11 +33,14 @@
     {% endfor %}
     {% endif %}
 </div>
-
+<div class="row">
+    <div id="summary" class="col-xs-12" style="height:400px"></div>
+</div>
 
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
+<script src="{{ url_for('static', filename='vendor/echarts/echarts.js')}}"></script>
 <script src="{{ url_for('static', filename='js/main.js')}}"></script>
 {% endblock %}

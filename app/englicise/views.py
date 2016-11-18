@@ -17,27 +17,37 @@ def index():
 @englicise.route('/add-word', methods=['GET', 'POST'])
 @login_required
 def add_word():
+    back_href = request.args.get('back', '', type=str)
+    if not back_href:
+        back_href = url_for('englicise.words')
     form = NewWordForm()
     if form.validate_on_submit():
-        word = EnglishWord()
-        word.book = EnglishBook.query.get(form.book.data)
-        word.english = form.english.data
-        word.chinese = form.chinese.data
-        word.example = form.example.data
-        db.session.add(word)
-        db.session.commit()
-        ws = EnglishWordScore(word_id=word.id, user_id=3)
-        db.session.add(ws)
-        db.session.commit()
-        flash('New word [' + word.english + '] has been added.')
-        return render_template('englicise/add_word.html', form=form)
-
-    return render_template('englicise/add_word.html', form=form)
+        word = EnglishWord.query.filter_by(english=form.english.data).first()
+        if not word:
+            word = EnglishWord()
+            #word.book = EnglishBook.query.get(form.book.data)
+            word.english = form.english.data
+            word.chinese = form.chinese.data
+            word.example = form.example.data
+            db.session.add(word)
+            db.session.commit()
+        ws = EnglishWordScore.query.filter_by(word_id=word.id).filter_by(user_id=current_user.id).first()
+        if not ws:
+            ws = EnglishWordScore(word_id=word.id, user_id=current_user.id)
+            db.session.add(ws)
+            db.session.commit()
+            flash('New word [' + word.english + '] has been added.')
+        else:
+            flash('Word [' + word.english + '] already added.')
+    return render_template('englicise/add_word.html', form=form, back_href=back_href)
 
 
 @englicise.route('/word/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_word(id):
+    back_href = request.args.get('back', '', type=str)
+    if not back_href:
+        back_href = url_for('englicise.words')
     form = EditWordForm()
     word = EnglishWord.query.filter_by(id=id).first_or_404()
     if form.validate_on_submit():
@@ -48,11 +58,11 @@ def edit_word(id):
         db.session.add(word)
         db.session.commit()
         flash('Word [' + word.english + '] has been updated.')
-        return redirect(url_for('englicise.words'))
+        return redirect(back_href)
     form.english.data = word.english
     form.chinese.data = word.chinese
     form.example.data = word.example
-    return render_template('englicise/edit_word.html', form=form)
+    return render_template('englicise/edit_word.html', form=form, back_href=back_href)
 
 
 @englicise.route('/words')

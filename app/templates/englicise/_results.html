@@ -45,6 +45,7 @@
               <th>Correct</th>
               <th>Start</th>
               <th>Finish</th>
+              <th>Duration</th>
               <th></th>
             </tr>
         </thead>
@@ -52,12 +53,13 @@
             {% if exercises %}
             {% for exercise in exercises %}
                 {% if exercise.finish %}
-                <tr>
+                <tr data-href="{{ url_for('.exercise_result', id=exercise.id) }}">
                     <td>{{ exercise.id }}</td>
                     <td>{{ exercise.total }}</td>
                     <td>{{ exercise.correct }}</td>
                     <td>{{ moment(exercise.start).fromNow() }}</td>
                     <td>{{ moment(exercise.finish).fromNow() }}</td>
+                    <td>{{ str(exercise.finish - exercise.start) }}</td>
                     <td><a href="{{ url_for('.exercise_result', id=exercise.id) }}">
                         <span class="glyphicon glyphicon-eye-open"></span>
                         </a>

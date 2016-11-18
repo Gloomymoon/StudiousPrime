@@ -1,3 +1,9 @@
+.page-header {
+    margin: 10px 0 10px;
+}
+h3 .pull-right {
+    margin-top: -4px;
+}
 .navbar {
     border-radius: 0px !important;
     margin-bottom: 0;

@@ -3,15 +3,16 @@
 {% block title %}Englicise{% endblock %}
 
 {% block navbar_content %}
-            <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('englicise.exercise') }}"><span class="glyphicon glyphicon-road"></span> Go! </a></li>
-                <li><a href="{{ url_for('englicise.exercise_results') }}"><span class="glyphicon glyphicon-stats"></span> Results</a></li>
-                <li><a href="{{ url_for('englicise.achievements') }}"><span class="glyphicon glyphicon-bookmark"></span> Achievements</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('englicise.add_word') }}"><span class="glyphicon glyphicon-plus"></span> New Word </a></li>
-                <li><a href="{{ url_for('englicise.words') }}"><span class="glyphicon glyphicon-book"></span> Dictionary </a></li>
-            </ul>
+<ul class="nav navbar-nav">
+    <li><a href="{{ url_for('englicise.exercise') }}"><span class="glyphicon glyphicon-road"></span> Go! </a></li>
+    <li><a href="{{ url_for('englicise.exercise_results') }}"><span class="glyphicon glyphicon-stats"></span>
+        Results</a></li>
+    <li><a href="{{ url_for('englicise.achievements') }}"><span class="glyphicon glyphicon-bookmark"></span>
+        Achievements</a></li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+    <li><a href="{{ url_for('englicise.words') }}"><span class="glyphicon glyphicon-book"></span> Dictionary </a></li>
+</ul>
 {% endblock %}
 
 {% block scripts %}
@@ -34,5 +35,6 @@ function flask_moment_render_all() {
 $(document).ready(function() {
     flask_moment_render_all();
 });
+
 </script>
 {% endblock %}
