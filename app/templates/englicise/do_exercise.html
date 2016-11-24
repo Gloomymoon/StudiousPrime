@@ -49,7 +49,7 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="{{ url_for('static', filename='vendor/jquery.inputmask.bundle.min.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.inputmask.bundle.min.js')}}"></script>
 <script>
         $(function(){
             $('#word_mask').inputmask({
