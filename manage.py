@@ -3,7 +3,8 @@
 import os
 from app import create_app, db
 from app.main.models import User, Role
-from app.englicise.models import EnglishWord, EnglishWordScore, EnglishExercise, EnglishQuestion, EnglishBook
+from app.englicise.models import EnglishWord, EnglishWordScore, EnglishExercise, \
+    EnglishQuestion, EnglishBook, EnglishSetting
 from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
 
@@ -65,3 +66,19 @@ def add_wordscores():
             ws = EnglishWordScore(word_id=w.id, user_id=3)
             db.session.add(ws)
             db.session.commit()
+
+def add_settings():
+    db.create_all()
+    s = EnglishSetting(category='level', user_id=3, key='total', value='25')
+    s1 = EnglishSetting(category='level', user_id=3, key='1', value='12')
+    s2 = EnglishSetting(category='level', user_id=3, key='2', value='8')
+    s3 = EnglishSetting(category='level', user_id=3, key='3', value='3')
+    s4 = EnglishSetting(category='level', user_id=3, key='4', value='2')
+    s5 = EnglishSetting(category='level', user_id=3, key='5', value='0')
+    db.session.add(s)
+    db.session.add(s1)
+    db.session.add(s2)
+    db.session.add(s3)
+    db.session.add(s4)
+    db.session.add(s5)
+    db.session.commit()

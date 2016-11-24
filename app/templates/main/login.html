@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Login{% endblock %}
+
+{% block page_content %}
+<div class="col-md-6 col-md-offset-3">
+    <div class="page-header">
+        <h3>Login
+        </h3>
+    </div>
+    <form class="form" method="POST">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_field(form.username, class='form-control input-icon input-icon-user') }}
+        {{ wtf.form_field(form.password, class='form-control input-icon input-icon-password') }}
+        {{ wtf.form_field(form.remember_me) }}
+        {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

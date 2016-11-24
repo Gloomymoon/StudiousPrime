@@ -9,9 +9,28 @@ from utilities import word_mask, word_strong
 class EnglishSetting(db.Model):
     __tablename__ = 'english_settings'
     category = db.Column(db.String(64), primary_key=True)
+    user_id = db.Column(db.Integer,  db.ForeignKey('users.id'), primary_key=True)
     key = db.Column(db.String(64), primary_key=True)
     value = db.Column(db.String(64))
 
+    @staticmethod
+    def get_user_settings(user_id):
+        try:
+            settings = EnglishSetting.query.filter_by(user_id=user_id).filter_by(category='level')
+            total = settings.filter_by(key='total').first()
+            level1 = settings.filter_by(key='1').first()
+            level2 = settings.filter_by(key='2').first()
+            level3 = settings.filter_by(key='3').first()
+            level4 = settings.filter_by(key='4').first()
+            level5 = settings.filter_by(key='5').first()
+            return [int(total.value),
+                    int(level1.value),
+                    int(level2.value),
+                    int(level3.value),
+                    int(level4.value),
+                    int(level5.value)]
+        except:
+            return current_app.config['QUESTIONS_PER_LEVEL']
 
 class EnglishBookWords(db.Model):
     __tablename__ = 'english_bookwords'
@@ -127,7 +146,9 @@ class EnglishExercise(db.Model):
             db.session.commit()
         words = EnglishWordScore.query.filter_by(user_id=self.user_id)
         questions = []
-        question_numbers = current_app.config["QUESTIONS_PER_LEVEL"]
+        question_numbers = EnglishSetting.get_user_settings(self.user_id)
+        #question_numbers[0] = 0
+        #question_numbers = current_app.config["QUESTIONS_PER_LEVEL"]
         current_level = 4
         if words:
             while current_level > 0:

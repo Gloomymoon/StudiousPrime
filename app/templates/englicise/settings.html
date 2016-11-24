@@ -1,0 +1,128 @@
+{% extends "englicise/base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-spinner.css') }}">
+{% endblock %}
+
+{% block title %}Englicise Settings{% endblock %}
+
+{% block page_content %}
+<div class="col-md-6 col-md-offset-3">
+    <div class="page-header">
+        <h3>Settings
+        </span>
+        </h3>
+    </div>
+    <form class="form-horizontal" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group total-group">
+            {{ form.total.label(class="col-xs-3 text-right") }}
+            <div class="col-xs-6 input-group spinner" data-trigger="spinner" id="spinner">
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></a>
+                </div>
+                {{ form.total(class="form-control text-center") }}
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group"></div>
+        <div class="form-group spin-group">
+            {{ form.level1.label(class="col-xs-3 text-right") }}
+            <div class="col-xs-6 input-group spinner" data-trigger="spinner" id="spinner">
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></a>
+                </div>
+                {{ form.level1(class="form-control text-center") }}
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group spin-group">
+            {{ form.level2.label(class="col-xs-3 text-right") }}
+            <div class="col-xs-6 input-group spinner" data-trigger="spinner" id="spinner">
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></a>
+                </div>
+                {{ form.level2(class="form-control text-center") }}
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group spin-group">
+            {{ form.level3.label(class="col-xs-3 text-right") }}
+            <div class="col-xs-6 input-group spinner" data-trigger="spinner" id="spinner">
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></a>
+                </div>
+                {{ form.level3(class="form-control text-center") }}
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group spin-group">
+            {{ form.level4.label(class="col-xs-3 text-right") }}
+            <div class="col-xs-6 input-group spinner" data-trigger="spinner" id="spinner">
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></a>
+                </div>
+                {{ form.level4(class="form-control text-center") }}
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group spin-group">
+            {{ form.level5.label(class="col-xs-3 text-right") }}
+            <div class="col-xs-6 input-group spinner" data-trigger="spinner" id="spinner">
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-down" data-spin="down"><i class="glyphicon glyphicon-minus"></i></a>
+                </div>
+                {{ form.level5(class="form-control text-center") }}
+                <div class="input-group-addon">
+                    <a href="javascript:;" class="spin-up" data-spin="up"><i class="glyphicon glyphicon-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.spinner.min.js')}}"></script>
+<script>
+$(document).ready(function() {
+    $('.spinner').spinner();
+    $('.spin-group .input-group.spinner .spin-down').click(function(){
+        if (parseInt($(this).parent().next('input').val()) > 0){
+            $('#total').val(parseInt($('#total').val()) - 1);
+        }
+    });
+    $('.spin-group .input-group.spinner .spin-up').click(function(){
+        $('#total').val(parseInt($('#total').val()) + 1);
+    });
+    $('.spinner').spinner();
+    $('.total-group .input-group.spinner .spin-down').click(function(){
+        if (parseInt($('#total').val()) > 1){
+            if (parseInt($('#level1').val()) > 0){ $('#level1').val( parseInt($('#level1').val()) - 1); }
+            else if (parseInt($('#level2').val()) > 0){ $('#level2').val( parseInt($('#level2').val()) - 1); }
+            else if (parseInt($('#level3').val()) > 0){ $('#level3').val( parseInt($('#level3').val()) - 1); }
+            else if (parseInt($('#level4').val()) > 0){ $('#level4').val( parseInt($('#level4').val()) - 1); }
+            else if (parseInt($('#level5').val()) > 0){ $('#level5').val( parseInt($('#level5').val()) - 1); }
+        }
+    });
+    $('.total-group .input-group.spinner .spin-up').click(function(){
+        $('#level1').val( parseInt($('#level1').val()) + 1);
+    });
+});
+</script>
+{% endblock %}

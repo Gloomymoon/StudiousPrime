@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, SelectMultipleField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, SelectMultipleField, IntegerField
 from wtforms.validators import Required
 from wtforms import ValidationError
 from wtforms_components import read_only
@@ -16,7 +16,6 @@ class NewWordForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(NewWordForm, self).__init__(*args, **kwargs)
         #self.books.choices = [(book.id, book.name) for book in EnglishBook.query.order_by(EnglishBook.id).all()]
-
 
 
 class EditWordForm(FlaskForm):
@@ -45,3 +44,22 @@ class QuestionForm(FlaskForm):
         if '_' in field.data:
             field.data = ''
             raise ValidationError('Please fill in all the blanks.')
+
+
+class LevelSettingForm(FlaskForm):
+    total = IntegerField('Total', render_kw={"data-min": "1"})
+    level1 = IntegerField('Level 1', render_kw={"data-min": "0"})
+    level2 = IntegerField('2', render_kw={"data-min": "0"})
+    level3 = IntegerField('3', render_kw={"data-min": "0"})
+    level4 = IntegerField('4', render_kw={"data-min": "0"})
+    level5 = IntegerField('5', render_kw={"data-min": "0"})
+    submit = SubmitField('Save')
+
+    def __init__(self, *args, **kwargs):
+        super(LevelSettingForm, self).__init__(*args, **kwargs)
+        read_only(self.total)
+        read_only(self.level1)
+        read_only(self.level2)
+        read_only(self.level3)
+        read_only(self.level4)
+        read_only(self.level5)

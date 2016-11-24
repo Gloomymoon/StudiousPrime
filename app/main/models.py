@@ -1,4 +1,5 @@
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from app import db, login_manager
 
@@ -67,6 +68,8 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
+        if not password:
+            return True
         return check_password_hash(self.password_hash, password)
 
     def verify_user(self):

@@ -10,7 +10,7 @@ class Config:
     BOOTSTRAP_SERVE_LOCAL = True
     ATH_ADMIN = os.environ.get('ATH_ADMIN')
     QUESTIONS_PER_EXERCISE = 25
-    QUESTIONS_PER_LEVEL = [0, 15, 5, 3, 2, 0]   # question numbers by every level from 0 to 5
+    QUESTIONS_PER_LEVEL = [25, 15, 5, 3, 2, 0]   # question numbers by every level from 0 to 5
     WORDS_PER_PAGE = 10
     EXERCISES_PER_PAGE = 10
 

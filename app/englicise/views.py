@@ -3,8 +3,9 @@ from flask import render_template, flash, request, current_app, redirect, url_fo
 from flask_login import login_required, current_user
 from . import englicise
 from app import db
-from .forms import NewWordForm, EditWordForm, QuestionForm
-from .models import EnglishWord, EnglishWordScore, EnglishExercise, EnglishQuestion, EnglishBook, EnglishStatistic
+from .forms import NewWordForm, EditWordForm, QuestionForm, LevelSettingForm
+from .models import EnglishWord, EnglishWordScore, EnglishExercise, \
+    EnglishQuestion, EnglishBook, EnglishStatistic, EnglishSetting
 
 
 @englicise.route('/')
@@ -165,8 +166,45 @@ def exercise_result(id):
     exercise = EnglishExercise.query.filter_by(id=id).first_or_404()
     return render_template('englicise/exercise_result.html', exercise=exercise)
 
+
 @englicise.route('/achievements')
 @login_required
 def achievements():
     achievements = EnglishStatistic.achievements(current_user.id)
     return render_template('englicise/achievements.html', achievements=achievements)
+
+
+@englicise.route('/settings/level', methods=['GET', 'POST'])
+@login_required
+def settings():
+    form = LevelSettingForm()
+    settings = EnglishSetting.query.filter_by(user_id=current_user.id).filter_by(category='level')
+    total = settings.filter_by(key='total').first()
+    level1 = settings.filter_by(key='1').first()
+    level2 = settings.filter_by(key='2').first()
+    level3 = settings.filter_by(key='3').first()
+    level4 = settings.filter_by(key='4').first()
+    level5 = settings.filter_by(key='5').first()
+    if form.validate_on_submit():
+        total.value = int(form.total.data)
+        level1.value = int(form.level1.data)
+        level2.value = int(form.level2.data)
+        level3.value = int(form.level3.data)
+        level4.value = int(form.level4.data)
+        level5.value = int(form.level5.data)
+        db.session.add(total)
+        db.session.add(level1)
+        db.session.add(level2)
+        db.session.add(level3)
+        db.session.add(level4)
+        db.session.add(level5)
+        db.session.commit()
+        flash('Level settings saved.')
+    form.total.data = str(total.value)
+    form.level1.data = str(level1.value)
+    form.level2.data = str(level2.value)
+    form.level3.data = str(level3.value)
+    form.level4.data = str(level4.value)
+    form.level5.data = str(level5.value)
+
+    return render_template("englicise/settings.html", form=form)
