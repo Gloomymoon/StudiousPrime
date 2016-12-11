@@ -247,3 +247,7 @@ main {
     padding: 0 1rem;
     font-size: 1.2rem
 }
+
+#exercise-button .btn-floating {
+    margin-top: -28px;
+}

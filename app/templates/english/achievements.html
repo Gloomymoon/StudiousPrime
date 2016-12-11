@@ -20,42 +20,42 @@
             <thead></thead>
             <tbody>
             <tr>
-                <td class="center-align"></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">explicit</i></td>
                 <td class="center-align">{{ achievement["total_exercises"] }}</td>
                 <td>Total exercises taken</td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-list"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">subject</i></td>
                 <td class="center-align">{{ achievement["total_tested"] }}</td>
                 <td>Total questions answered</td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-ok"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">playlist_add_check</i></td>
                 <td class="center-align">{{ achievement["total_passed"] }}</td>
-                <td>Total <strong class="">SCORE</strong></td>
+                <td>Total correct answers</td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-filter"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">functions</i></td>
                 <td class="center-align">
                     {{
-                    "%2.1f" % (achievement["total_passed"] / achievement["total_tested"] * 100)}}%
+                    "%2.1f" % (achievement["total_passed"] / achievement["total_tested"] * 100)}}
                 </td>
                 <td>Average <strong class=" ">SCORE</strong></td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-thumbs-up"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">thumb_up</i></td>
                 <td class="center-align">{{ achievement["total_full_score"] }}</td>
                 <td>Number of full <strong class="">SCORE</strong></td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-sort-by-attributes-alt"></span></td>
-                <td class="center-align">{{ "%2.1f" % (achievement["highest_score"] * 100) }}%</td>
+                <td class="center-align valign-wrapper"><i class="material-icons">publish</i></td>
+                <td class="center-align">{{ "%2.1f" % (achievement["highest_score"] * 100) }}</td>
                 <td>Highest <strong class="">SCORE</strong></td>
             </tr>
             </tbody>
         </table>
         <div class="divider"></div>
-        <p class="grey-text right-align">*score = correct answers</p>
+        <p class="grey-text right-align">*<strong>SCORE</strong> = correct / answered * 100</p>
     </div>
 </div>
 <div id="words" class="col s12">
@@ -64,17 +64,17 @@
             <thead></thead>
             <tbody>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-font"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">font_download</i></td>
                 <td class="center-align">{{ achievement["total_tested_words"] }}</td>
                 <td>Total words tested</td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-saved"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">spellcheck</i></td>
                 <td class="center-align">{{ achievement["total_passed_words"] }}</td>
                 <td>Total words passed</td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-adjust"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">tonality</i></span></td>
                 <td class="center-align">{{ "%2.2f" % (achievement["total_tested_words"] / achievement["total_words"]
                     *100)
                     }}%
@@ -82,7 +82,7 @@
                 <td>Tested words coverage</td>
             </tr>
             <tr>
-                <td class="center-align"><span class="glyphicon glyphicon-ok-sign"></span></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">timelapse</i></td>
                 <td class="center-align">{{ "%2.2f" % (achievement["total_passed_words"] / achievement["total_words"]
                     *100)
                     }}%
@@ -100,20 +100,37 @@
             <thead></thead>
             <tbody>
             <tr>
-                <td><i class="material-icons">format_list_numbered</i></td>
+                <td class="center-align valign-wrapper"><i class="material-icons">format_list_numbered</i></td>
                 <td class="center-align">Level 1</td>
                 <td class="right-align">{{ achievement["level1_words"] }}</td>
                 <td>words</td>
             </tr>
             <tr>
-                <td></td>
+                <td class="center-align"></td>
                 <td class="center-align">Level 2</td>
                 <td class="right-align">{{ achievement["level2_words"] }}</td>
                 <td>words</td>
             </tr>
+            <tr>
+                <td class="center-align"></td>
+                <td class="center-align">Level 3</td>
+                <td class="right-align">{{ achievement["level3_words"] }}</td>
+                <td>words</td>
+            </tr>
+            <tr>
+                <td class="center-align"></td>
+                <td class="center-align">Level 4</td>
+                <td class="right-align">{{ achievement["level4_words"] }}</td>
+                <td>words</td>
+            </tr>
+            <tr>
+                <td class="center-align"></td>
+                <td class="center-align">Level 5</td>
+                <td class="right-align">{{ achievement["level5_words"] }}</td>
+                <td>words</td>
+            </tr>
             </tbody>
         </table>
-        <div class="divider"></div>
     </div>
 </div>
 

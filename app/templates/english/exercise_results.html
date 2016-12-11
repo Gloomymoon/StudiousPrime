@@ -2,19 +2,32 @@
 {% import "_macros.html" as macros %}
 
 {% block title %}Exercise Results{% endblock %}
+{% block nav_class %}nav-extended{% endblock %}
 {% block navbar_title %}
 <a href="{{ url_for('english.exercise_results') }}" class="brand-logo">Exercises</a>
 {% endblock %}
-
+{% block navbar_tabs %}
+<div class="tabs tabs-transparent" style="height:30px;">
+</div>
+{% endblock %}
 {% block page_content %}
+<div class="center" id="exercise-button">
+    {% if exercise %}
+    <a class="center z-depth-2 btn-floating btn-large waves-effect waves-light red lighten-1"
+       href="{{ url_for('english.exercise') }}">
+        <i class="material-icons left">playlist_play</i>Continue...</a>
+    {% else %}
+    <a class="center z-depth-2 btn-floating btn-large waves-effect waves-light red lighten-1"
+       href="{{ url_for('english.exercise') }}">
+        <i class="material-icons left">playlist_add</i>New Exercise</a>
+    {% endif %}
+</div>
 <div class="section">
-    <div class="center row">
+    <div class="center row grey-text">
         {% if exercise %}
-        <a class="btn btn-large waves-effect waves-light light-blue lighten-1" href="{{ url_for('english.exercise') }}">
-            <i class="material-icons left">playlist_play</i>Continue...</a>
+        continue exercise {{ exercise.id }}
         {% else %}
-        <a class="btn btn-large waves-effect waves-light red lighten-1" href="{{ url_for('english.exercise') }}">
-            <i class="material-icons left">playlist_add</i>New Exercise</a>
+        start a anw exercise
         {% endif %}
     </div>
     <table class="bordered highlight">
@@ -66,6 +79,8 @@ $(document).ready(function() {
         location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname);
     });
 });
+
+
 
 </script>
 {% endblock %}
