@@ -2,17 +2,17 @@
 <ul class="pagination">
     <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
         <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
-            &laquo;
+            <i class="material-icons">chevron_left</i>
         </a>
     </li>
     {% for p in pagination.iter_pages() %}
         {% if p %}
             {% if p == pagination.page %}
-            <li class="active">
+            <li class="active light-blue lighten-1">
                 <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
             </li>
             {% else %}
-            <li>
+            <li class="waves-effect">
                 <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
             </li>
             {% endif %}
@@ -22,19 +22,9 @@
     {% endfor %}
     <li{% if not pagination.has_next %} class="disabled"{% endif %}>
         <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
-            &raquo;
+            <i class="material-icons">chevron_right</i>
         </a>
     </li>
 </ul>
 {% endmacro %}
 
-{% macro rpt_menu_widget(menus={}, index=0) %}
-<ul class='nav nav-sidebar'>
-    {% for i in menus %}
-    <li class="list-item{% if i == index %} active{% endif %}">
-        <dl><dt><a href='{% if menus[i][1] %}{{ menus[i][1] }}{% else %}{{ i }} {% endif %}'>{{ menus[i][0] }}</a></dt>
-        </dl>
-    </li>
-    {% endfor %}
-</ul>
-{% endmacro %}

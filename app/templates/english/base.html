@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}english{% endblock %}
+
+{% block navbar_title %}
+English
+{% endblock %}
+
+{% block navbar_content %}
+{{ super() }}
+<li><a href="{{ url_for('english.index') }}">Home</a></li>
+<li><a href="{{ url_for('english.exercise') }}">Exercises</a></li>
+<li><a href="{{ url_for('english.achievements') }}">Achevements</a></li>
+<li><a href="{{ url_for('english.books') }}">Books</a></li>
+<li><a href="{{ url_for('english.settings') }}"><i class="material-icons">build</i></a></li>
+<li><a href="{{ url_for('english.settings') }}"><i class="material-icons">record_voice_over</i></a></li>
+<li><a href="#"><i class="material-icons">face</i></a></li>
+{% endblock %}
+
+
+{% block sidenav_content %}
+{{ super() }}
+<li><a href="{{ url_for('english.index') }}"><i class="material-icons">dashboard</i> Dashboard</a></li>
+<li><a href="{{ url_for('english.exercise_results') }}"><i class="material-icons">explicit</i> Exercises</a></li>
+<li><a href="{{ url_for('english.achievements') }}"><i class="material-icons">brightness_auto</i> Achevements</a></li>
+<li><a href="{{ url_for('english.books') }}"><i class="material-icons">import_contacts</i> Books</a></li>
+<li class="divider"></li>
+<li><a href="{{ url_for('english.settings') }}"><i class="material-icons">settings</i> Settings</a></li>
+<li><a href="#"><i class="material-icons">sms_faild</i> Feedback</a></li>
+<li class="divider"></li>
+<li><a href="#"><i class="material-icons">help</i> Help</a></li>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

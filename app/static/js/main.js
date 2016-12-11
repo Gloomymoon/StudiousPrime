@@ -1,19 +1,27 @@
 function nextword(){
     $.get("/api/e/word/next", {timeStamp: new Date().getTime()},
         function (data, status) {
+            //$("#newword .progress").hide();
             $("#english").html(data['english']);
             $("#chinese").html(data['chinese']);
             $("#example").html(data['example']);
+            $("#book_title").html(data['book_title']);
+            $("#lesson").html('Lesson ' + data['lesson'])
         });
 }
 
 $(document).ready(function() {
-    $(".caption h3").click(function(){
-        $(this).next().toggle(200);
-    });
-    $("#next").click(function(){nextword()});
 
-    nextword();
+    $("#next").click(function(){nextword()});
+    $("#error_words li").click(function(){
+        if ($(this).find(".material-icons").html() == 'arrow_drop_up'){
+            $(this).find(".material-icons").html("arrow_drop_down");
+        }
+        else {
+            $(this).find(".material-icons").html("arrow_drop_up");
+        }
+    })
+    //nextword();
 
     var myChart = echarts.init(document.getElementById('summary'));
     myChart.setOption({

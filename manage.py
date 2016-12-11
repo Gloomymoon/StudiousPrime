@@ -3,8 +3,7 @@
 import os
 from app import create_app, db
 from app.main.models import User, Role
-from app.englicise.models import EnglishWord, EnglishWordScore, EnglishExercise, \
-    EnglishQuestion, EnglishBook, EnglishSetting
+from app.english.models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, EnglishSetting
 from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
 
@@ -14,8 +13,9 @@ manager = Manager(app)
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role,
-                EnglishWord=EnglishWord, EnglishWordScore=EnglishWordScore,
-                EnglishExercise=EnglishExercise, EnglishQuestion=EnglishQuestion, EnglishBook=EnglishBook)
+                Word=EnglishWord, MyWord=EnglishMyWord,
+                MyExercise=EnglishMyExercise, Book=EnglishBook, Setting=EnglishSetting)
+
 
 manager.add_command("runserver", Server(host="0.0.0.0", port=5000))
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -29,6 +29,7 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
+
 if __name__ == '__main__':
     manager.run()
 
@@ -38,47 +39,47 @@ def init_app_data():
     db.create_all()
 
     Role.insert_roles()
-    b = EnglishBook(name='Default')
-    db.session.add(b)
+    b1 = EnglishBook(title=u'Side By Side I', description=u'《朗文国际英语教程》第一册', image="images/english/sbs1.jpg")
+    b2 = EnglishBook(title=u'Side By Side II', description=u'《朗文国际英语教程》第二册', image="images/english/sbs2.jpg")
+    b3 = EnglishBook(title=u'Side By Side III', description=u'《朗文国际英语教程》第三册', image="images/english/sbs3.jpg")
+    b4 = EnglishBook(title=u'Side By Side IV', description=u'《朗文国际英语教程》第四册', image="images/english/sbs4.jpg")
+    db.session.add(b1)
+    db.session.add(b2)
+    db.session.add(b3)
+    db.session.add(b4)
+    db.session.commit()
+
     u = User(name='Dad', role=Role.query.filter_by(permissions=0xff).first())
     db.session.add(u)
     u2 = User(name='Mum', role=Role.query.filter_by(permissions=0xff).first())
     db.session.add(u2)
-    u3 = User(name='David', role=Role.query.filter_by(permissions=0x01).first())
+    u3 = User(name='David', role=Role.query.filter_by(name="Knight").first())
     db.session.add(u3)
     db.session.commit()
-    '''
+
+    s = EnglishSetting(user_id=u3.id, level1=12, level2=8, level3=3, level4=2)
+    db.session.add(s)
+    db.session.commit()
+
     for i in range(50):
-        w = EnglishWord(english='Test'+str(i+1), chinese='Test'+str(i+1))
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 1), example='Test Example', book_id=b1.id,
+                        lesson=i / 10 + 1)
         db.session.add(w)
         db.session.commit()
-        ws = EnglishWordScore(word_id=w.id, user_id=u3.id, score=i/5)
-        db.session.add(ws)
+    for i in range(50):
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 51), example='Test Example', book_id=b2.id,
+                        lesson=i / 10 + 1)
+        db.session.add(w)
         db.session.commit()
-    '''
 
+    for i in range(50):
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 101), example='Test Example', book_id=b3.id,
+                        lesson=i / 10 + 1)
+        db.session.add(w)
+        db.session.commit()
 
-def add_wordscores():
-    wsQuery = EnglishWordScore.query.filter_by(user_id=3)
-    for w in EnglishWord.query.all():
-        ws = wsQuery.filter_by(word_id=w.id).first()
-        if not ws:
-            ws = EnglishWordScore(word_id=w.id, user_id=3)
-            db.session.add(ws)
-            db.session.commit()
-
-def add_settings():
-    db.create_all()
-    s = EnglishSetting(category='level', user_id=3, key='total', value='25')
-    s1 = EnglishSetting(category='level', user_id=3, key='1', value='12')
-    s2 = EnglishSetting(category='level', user_id=3, key='2', value='8')
-    s3 = EnglishSetting(category='level', user_id=3, key='3', value='3')
-    s4 = EnglishSetting(category='level', user_id=3, key='4', value='2')
-    s5 = EnglishSetting(category='level', user_id=3, key='5', value='0')
-    db.session.add(s)
-    db.session.add(s1)
-    db.session.add(s2)
-    db.session.add(s3)
-    db.session.add(s4)
-    db.session.add(s5)
-    db.session.commit()
+    for i in range(50):
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 151), example='Test Example', book_id=b4.id,
+                        lesson=i / 10 + 1)
+        db.session.add(w)
+        db.session.commit()

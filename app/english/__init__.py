@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-englicise = Blueprint('englicise', __name__)
+english = Blueprint('english', __name__)
 
 from . import views
 

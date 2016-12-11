@@ -1,0 +1,96 @@
+{% extends "english/base.html" %}
+
+{% block title %}My Books{% endblock %}
+{% block nav_class %}nav-extended{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.books') }}" class="brand-logo"> Books </a>
+{% endblock %}
+{% block navbar_tabs %}
+<ul class="tabs tabs-transparent">
+    <li class="tab"><a class="active" href="#my_books">My books</a></li>
+    <li class="tab"><a href="#new_books">New books</a></li>
+    <li class="tab"><a href="#search"><i class="material-icons">search</i></a></li>
+</ul>
+{% endblock %}
+
+{% block page_content %}
+<div id="my_books" class="col s12">
+    <div class="section">
+        <div class="row">
+            {% if mybooks %}
+            {% for mybook in mybooks %}
+            <div class="col m5 card horizontal hoverable grid-book sticky-action">
+                <div class="card-image waves-effect waves-light">
+                    <image class="activator" src="{{ url_for('static', filename=mybook.book.image) }}"></image>
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">{{ mybook.book.title }}</span>
+                        <p class="truncate">{{ mybook.book.description }}</p>
+                    </div>
+                    <div class="card-action center-align">
+                        <a class="btn btn-flat waves-effect waves-light"
+                           href="{{ url_for('english.view_book', id=mybook.book_id)}}">View this
+                            book</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col m1"></div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div id="new_books" class="col s12">
+    <div class="section">
+        <div class="row">
+            {% if books %}
+            {% for book in books %}
+            <div class="col m5 card horizontal hoverable grid-book">
+                <div class="card-image waves-effect waves-light">
+                    <image class="activator" src="{{ url_for('static', filename=book.image) }}"></image>
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">{{ book.title }}</span>
+                        <p class="truncate">{{ book.description }}</p>
+                    </div>
+
+                    <div class="card-action center-align">
+                        <a class="btn btn-flat" href="{{ url_for('english.view_book', id=book.id)}}">View</a>
+                        <a href="#" class="btn btn-flat v-line"></a>
+                        <a class="btn btn-flat waves-effect waves-light"
+                           href="{{ url_for('english.add_book', id=book.id)}}">Add</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col m1"></div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div id="search" class="col s12">
+    <div class="section">
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+});
+
+
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}

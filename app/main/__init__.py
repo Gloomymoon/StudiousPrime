@@ -19,3 +19,7 @@ def inject_enumerate():
 @main.app_context_processor
 def inject_str():
     return dict(str=str)
+
+@main.app_context_processor
+def inject_len():
+    return dict(len=len)

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, SelectMultipleField, IntegerField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField, HiddenField, BooleanField
 from wtforms.validators import Required
 from wtforms import ValidationError
 from wtforms_components import read_only
@@ -37,22 +37,26 @@ class EditWordForm(FlaskForm):
 
 
 class QuestionForm(FlaskForm):
-    word_mask = StringField('', validators=[Required()])
+    answer = StringField('', validators=[Required()])
     submit = SubmitField('Next')
+    word_mask = HiddenField()
 
-    def validate_word_mask(self, field):
+    def validate_answer(self, field):
         if '_' in field.data:
             field.data = ''
             raise ValidationError('Please fill in all the blanks.')
 
 
 class LevelSettingForm(FlaskForm):
-    total = IntegerField('Total', render_kw={"data-min": "1"})
+    total = IntegerField('Total Questions', render_kw={"data-min": "1", "data-max": "100"})
     level1 = IntegerField('Level 1', render_kw={"data-min": "0"})
     level2 = IntegerField('2', render_kw={"data-min": "0"})
     level3 = IntegerField('3', render_kw={"data-min": "0"})
     level4 = IntegerField('4', render_kw={"data-min": "0"})
     level5 = IntegerField('5', render_kw={"data-min": "0"})
+    fill_down = BooleanField('Fill Down')
+    fill_level5 = BooleanField('Fill level 5')
+    use_mask = BooleanField('Use Mask')
     submit = SubmitField('Save')
 
     def __init__(self, *args, **kwargs):

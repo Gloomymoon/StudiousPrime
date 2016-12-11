@@ -1,12 +1,12 @@
-{% extends "englicise/base.html" %}
+{% extends "english/base.html" %}
 {% import "_macros.html" as macros %}
 
-{% block title %}Englicise Words List{% endblock %}
+{% block title %}english Words List{% endblock %}
 
 {% block page_content %}
     <h3>All Words
         <span class="pull-right">
-        <a id="btnNew" href="{{ url_for('englicise.add_word') }}" class="btn btn-primary" role="button">
+        <a id="btnNew" href="{{ url_for('english.add_word') }}" class="btn btn-primary" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             New Word
         </a>

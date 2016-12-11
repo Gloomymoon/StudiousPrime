@@ -1,0 +1,99 @@
+{% extends "english/base.html" %}
+
+{% block title %}My Book - {{ book.title }}{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My Books</a>
+{% endblock %}
+{% block page_content %}
+
+<div class="section">
+    <div class="row valign-wrapper">
+        <div class="col s4">
+            <image src="{{ url_for('static', filename=book.image) }}"
+                   class="responsive-img"></image>
+        </div>
+        <div class="col s8">
+            <h5>{{ book.title }}</h5>
+            <p>{{ book.description }}<br>
+                {% if mybook %}
+                Add: {{ moment(mybook.add_dt).fromNow() }}
+                {% endif %}
+            </p>
+            <ul>
+                {% if mybook %}
+                {% for level in mybook.get_levels() %}
+                <li class="center-align light-blue accent-{{ level[0] }}"
+                    style="width:{{ level[1] / mybook.word_count() *100 }}%">
+                    Lvl {{ level[0] }}
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+<ul class="collection card">
+    {% for lesson in lessons %}
+    {% if mybook and lesson["selected"] == '1' %}
+    <li class="collection-item valign-wrapper">
+        {% else %}
+    <li class="collection-item blue-grey lighten-5 valign-wrapper">
+        {% endif %}
+        <div class="row valign-wrapper">
+            <div class="col s4">
+                Lesson {{ lesson["lesson"] }}
+            </div>
+            <div class="col s4">
+                <div class="chip"> {{ lesson["count"] }} Words</div>
+            </div>
+            <div class="col s4">
+                {% if mybook %}
+                <div class="switch">
+                    <label>
+                        {% if lesson["selected"] == '1' %}
+                        <input id="lesson{{ lesson['lesson'] }}" type="checkbox" data-book="{{ book.id }}"
+                               data-lesson="{{ lesson['lesson'] }}" checked>
+                        <span class="lever"></span>
+                        <strong class="light-blue-text text-lighten-1">On</strong>
+                        {% else %}
+                        <input id="lesson{{ lesson['lesson'] }}" type="checkbox" data-book="{{ book.id }}"
+                               data-lesson="{{ lesson['lesson'] }}">
+                        <span class="lever"></span>
+                        <strong class="">Off</strong>
+                        {% endif %}
+                    </label>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </li>
+
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+    $(".switch input").click(function(){
+        if($(this).attr("checked")){
+            $.get('/api/e/book/enable/'+$(this).data("book") + '/' + $(this).data("lesson")).done(function (data) {
+                //alert(data);
+                $("#lesson"+data.lesson).nextAll("strong").html("On").addClass("light-blue-text text-lighten-1")
+                .parents(".collection-item").removeClass("blue-grey lighten-5");
+            });
+        }
+        else{
+            $.get('/api/e/book/disable/'+$(this).data("book") + '/' + $(this).data("lesson")).done(function (data) {
+                //alert(data);
+                $("#lesson"+data.lesson).nextAll("strong").html("Off").removeClass("light-blue-text text-lighten-1")
+                .parents(".collection-item").addClass("blue-grey lighten-5");
+            });
+        }
+    });
+});
+
+
+</script>
+{% endblock %}

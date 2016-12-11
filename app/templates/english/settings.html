@@ -1,0 +1,239 @@
+{% extends "english/base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-spinner.css') }}">
+{% endblock %}
+
+{% block title %}English Settings{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.settings') }}" class="brand-logo">Settings</a>
+{% endblock %}
+{% block page_content %}
+<div class="section">
+    <form class="center-align" method="post" id="settings">
+        {{ form.hidden_tag() }}
+        <div class="row valign-wrapper total-group">
+            <div class="col s4 right-align">{{ form.total.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.total(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row valign-wrapper spin-group">
+            <div class="col s4 right-align">{{ form.level1.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.level1(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row valign-wrapper spin-group">
+            <div class="col s4 right-align">{{ form.level2.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.level2(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row valign-wrapper spin-group">
+            <div class="col s4 right-align">{{ form.level3.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.level3(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row valign-wrapper spin-group">
+            <div class="col s4 right-align">{{ form.level4.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.level4(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row valign-wrapper spin-group">
+            <div class="col s4 right-align">{{ form.level5.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.level5(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s4 right-align">{{ form.fill_down.label() }}</div>
+            <div class="col s8">
+                <div class="switch">
+                    <label>
+                        {{ form.fill_down(class="form-control center-align") }}
+                        {% if form.fill_down.data %}
+                        <span class="lever"></span>
+                        <strong class="light-blue-text text-lighten-1">On</strong>
+                        {% else %}
+                        <span class="lever"></span>
+                        <strong class="">Off</strong>
+                        {% endif %}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 right-align">{{ form.fill_level5.label() }}</div>
+            <div class="col s8">
+                <div class="switch">
+                    <label>
+                        {{ form.fill_level5(class="form-control center-align") }}
+                        {% if form.fill_level5.data %}
+                        <span class="lever"></span>
+                        <strong class="light-blue-text text-lighten-1">On</strong>
+                        {% else %}
+                        <span class="lever"></span>
+                        <strong class="">Off</strong>
+                        {% endif %}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 right-align">{{ form.use_mask.label() }}</div>
+            <div class="col s8">
+                <div class="switch">
+                    <label>
+                        {{ form.use_mask(class="form-control center-align") }}
+                        {% if form.use_mask.data %}
+                        <span class="lever"></span>
+                        <strong class="light-blue-text text-lighten-1">On</strong>
+                        {% else %}
+                        <span class="lever"></span>
+                        <strong class="">Off</strong>
+                        {% endif %}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12">
+                {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.spinner.min.js')}}"></script>
+<script>
+$(document).ready(function() {
+    $('.spinner').spinner();
+        $(".switch input").click(function(){
+        if($(this).attr("checked")){
+                $(this).nextAll("strong").html("On").addClass("light-blue-text text-lighten-1")
+                .parents(".collection-item").removeClass("blue-grey lighten-5");
+        }
+        else{
+                $(this).nextAll("strong").html("Off").removeClass("light-blue-text text-lighten-1")
+                .parents(".collection-item").addClass("blue-grey lighten-5");
+        }
+    });
+
+    $('.spin-group .spinner .spin-down').click(function(){
+        if (parseInt($(this).parent().next('input').val()) > 0){
+            $('#total').val(parseInt($('#total').val()) - 1);
+        }
+    });
+    $('.spin-group .spinner .spin-up').click(function(){
+        if (parseInt($('#total').val()) < 100){
+            $('#total').val(parseInt($('#total').val()) + 1);
+        }
+        else {
+            $(this).parent().prev('input').val(parseInt($(this).parent().prev('input').val()) - 1);
+        }
+    });
+    $('.spinner').spinner();
+    $('.total-group .spinner .spin-down').click(function(){
+        if (parseInt($('#total').val()) > 1){
+            if (parseInt($('#level1').val()) > 0){ $('#level1').val( parseInt($('#level1').val()) - 1); }
+            else if (parseInt($('#level2').val()) > 0){ $('#level2').val( parseInt($('#level2').val()) - 1); }
+            else if (parseInt($('#level3').val()) > 0){ $('#level3').val( parseInt($('#level3').val()) - 1); }
+            else if (parseInt($('#level4').val()) > 0){ $('#level4').val( parseInt($('#level4').val()) - 1); }
+            else if (parseInt($('#level5').val()) > 0){ $('#level5').val( parseInt($('#level5').val()) - 1); }
+        }
+    });
+    $('.total-group .spinner .spin-up').click(function(){
+        if(parseInt($('#total').val()) < 100){
+            $('#level1').val( parseInt($('#level1').val()) + 1);
+        }
+    });
+});
+
+
+
+
+
+</script>
+{% endblock %}

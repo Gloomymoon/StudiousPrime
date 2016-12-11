@@ -1,0 +1,71 @@
+{% extends "english/base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Exercise Results{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.exercise_results') }}" class="brand-logo">Exercises</a>
+{% endblock %}
+
+{% block page_content %}
+<div class="section">
+    <div class="center row">
+        {% if exercise %}
+        <a class="btn btn-large waves-effect waves-light light-blue lighten-1" href="{{ url_for('english.exercise') }}">
+            <i class="material-icons left">playlist_play</i>Continue...</a>
+        {% else %}
+        <a class="btn btn-large waves-effect waves-light red lighten-1" href="{{ url_for('english.exercise') }}">
+            <i class="material-icons left">playlist_add</i>New Exercise</a>
+        {% endif %}
+    </div>
+    <table class="bordered highlight">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Total</th>
+            <th>Correct</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if exercises %}
+        {% for exercise in exercises %}
+        {% if exercise.finish_dt %}
+        <tr data-href="{{ url_for('.exercise_result', id=exercise.id) }}">
+            <td>{{ exercise.id }}</td>
+            <td>{{ exercise.total }}</td>
+            <td>{{ exercise.passed }}</td>
+            <td>{{ moment(exercise.create_dt).fromNow() }}</td>
+            <td>{{ (str(exercise.finish_dt - exercise.create_dt).split('.')[0]) }}</td>
+            <td><i class="material-icons">more_horiz</i>
+
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% if exercises and pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.exercise_results') }}
+</div>
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+    $("tbody tr").click(function(){
+        location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname);
+    });
+});
+
+</script>
+{% endblock %}

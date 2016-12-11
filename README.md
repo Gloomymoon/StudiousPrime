@@ -1,5 +1,15 @@
 # StudiousPrime
 
+### version 0.5 material-design
+updated 2016-11-26
+**Happy Black Friday!**
+
+1 切换为Material Design主题
+
+2 业务类重构
+
+3 增加选词功能
+
 ### version 0.4
 updated 2016-11-19
 

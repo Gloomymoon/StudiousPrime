@@ -1,0 +1,45 @@
+{% extends "english/base.html" %}
+
+{% block title %}Exercise Result{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.exercise_results') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>All
+    Results</a>
+{% endblock %}
+
+{% block page_content %}
+<div class="section">
+    <div>{% if exercise %}
+        <span>Exercise ID: {{ exercise.id }}</span>
+        <span class="right">{{ moment(exercise.create_dt).fromNow() }}</span>
+        {% endif %}
+    </div>
+        <h2 class="center-align score">{{ exercise.passed }} / {{ exercise.total}}</h2>
+        <p class="center-align grey-text">duration: {{ (str(exercise.finish_dt - exercise.create_dt).split('.')[0]) }}</p>
+    <div class="">
+        <table>
+            <thead>
+            <tr>
+                <th data-field="index">#</th>
+                <th data-field="chinese">Chinese</th>
+                <th data-field="english">English</th>
+                <th data-field="answer">Your answer</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if exercise %}
+            {% for index, question in enumerate(exercise.get_questions()) %}
+            {% if question['result'] != '1' %}
+            <tr>
+                <td>{{ index + 1 }}</td>
+                <td>{{ question['word'].word.chinese }}</td>
+                <td>{{ question['word'].word.english }}</td>
+                <td>{{ question['word'].highlight(question['answer']) | safe }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

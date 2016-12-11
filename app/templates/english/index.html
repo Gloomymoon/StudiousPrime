@@ -1,0 +1,55 @@
+{% extends "english/base.html" %}
+
+{% block title %}Studious Prime{% endblock %}
+
+{% block page_content %}
+
+<div id="newword" class="card">
+    <!-- p>Hello, {% if current_user.is_authenticated %}{{ current_user.name }}{% else %}Stranger{% endif %}!</p-->
+    <div class="card-content">
+        <!-- div class="progress light-blue lighten-4">
+            <div class="indeterminate light-blue lighten-1"></div>
+        </div -->
+        <h2 id="english">{{ newword.word.english }}</h2>
+        <h4 id="chinese">{{ newword.word.chinese }}</h4>
+        <p id="example" class="grey-text">{{ newword.word.example }}</p>
+        <a id="next" class="right btn-floating btn-large waves-effect waves-light red lighten-1" href="#">
+            <i class="material-icons">refresh</i>
+            Next</a>
+    </div>
+    <div class="card-action">
+        <div class="valign-wrapper">
+        <i class="material-icons">import_contacts</i><span id="book_title">{{ newword.word.book.title }}</span>&nbsp;<span class="right-align grey-text" id="lesson">Lesson {{ newword.word.lesson }}</span>
+    </div>
+    </div>
+
+</div>
+<ul id="error_words" class="card collapsible" data-collapsible="expandable">
+    <li>
+        <div class="collapsible-title light-blue lighten-1 white-text">Top 5 error words</div>
+    </li>
+    {% if error_words %}
+    {% for error_word in error_words %}
+    <li class="">
+        <div class="collapsible-header row"><span class="col s5">{{ error_word.word.english }}</span><span
+                class="col s5 grey-text">{{ error_word.word.chinese }}</span>
+            <span class="col s2 grey-text"><i class="material-icons center">arrow_drop_down</i></span></div>
+        <div class="collapsible-body grey lighten-4"><p class="grey-text"><span>{{ error_word.word.example }}</span>
+        <span class="right right-align">errors: {{ error_word.tested - error_word.passed }}</span></p></div>
+    </li>
+    {% endfor %}
+    {% endif %}
+</ul>
+
+<div class="card">
+    <div class="collapsible-title light-blue lighten-1 white-text">Scores</div>
+    <div id="summary" class="col-xs-12" style="height:300px"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='vendor/echarts/echarts.js')}}"></script>
+<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+{% endblock %}
