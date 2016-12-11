@@ -4,6 +4,8 @@
 updated 2016-11-26
 **Happy Black Friday!**
 
+This is a HUGE update.
+
 1 切换为Material Design主题
 
 2 业务类重构
