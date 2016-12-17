@@ -4,7 +4,7 @@
 {% block title %}Exercise Results{% endblock %}
 {% block nav_class %}nav-extended{% endblock %}
 {% block navbar_title %}
-<a href="{{ url_for('english.exercise_results') }}" class="brand-logo">Exercises</a>
+<a href="{{ url_for('english.exercises') }}" class="brand-logo">Exercises</a>
 {% endblock %}
 {% block navbar_tabs %}
 <div class="tabs tabs-transparent" style="height:30px;">
@@ -14,12 +14,12 @@
 <div class="center" id="exercise-button">
     {% if exercise %}
     <a class="center z-depth-2 btn-floating btn-large waves-effect waves-light red lighten-1"
-       href="{{ url_for('english.exercise') }}">
-        <i class="material-icons left">playlist_play</i>Continue...</a>
+       href="{{ url_for('english.new_exercise') }}">
+        <i class="material-icons left">play_arrow</i>Continue...</a>
     {% else %}
     <a class="center z-depth-2 btn-floating btn-large waves-effect waves-light red lighten-1"
-       href="{{ url_for('english.exercise') }}">
-        <i class="material-icons left">playlist_add</i>New Exercise</a>
+       href="{{ url_for('english.new_exercise') }}">
+        <i class="material-icons left">add</i>New Exercise</a>
     {% endif %}
 </div>
 <div class="section">
@@ -64,7 +64,7 @@
 
 {% if exercises and pagination %}
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, '.exercise_results') }}
+    {{ macros.pagination_widget(pagination, '.exercises') }}
 </div>
 {% endif %}
 </div>

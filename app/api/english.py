@@ -3,7 +3,7 @@ from flask import jsonify, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from app import db
-from app.english.models import EnglishMyExercise, EnglishMyWord, EnglishSummary, EnglishMyBook
+from app.english.models import EnglishMyExercise, EnglishMyWord, EnglishSummary, EnglishMyBook, EnglishLesson
 from . import api
 
 
@@ -64,21 +64,25 @@ def get_word_level():
     })
 
 
-@api.route('/e/book/enable/<int:book_id>/<int:lesson_id>')
+@api.route('/e/lesson/enable/<int:lesson_id>')
 @login_required
-def enable_lesson(book_id, lesson_id):
-    mybook = current_user.english_books.filter(EnglishMyBook.book_id == book_id).one_or_none()
-    if mybook:
-        if mybook.enable_lesson(lesson_id):
-            return jsonify({"lesson": lesson_id, "result": 'true'})
+def enable_lesson(lesson_id):
+    lesson = EnglishLesson.query.filter_by(id=lesson_id).one_or_none()
+    if lesson:
+        mybook = current_user.english_books.filter(EnglishMyBook.book_id == lesson.book_id).one_or_none()
+        if mybook:
+            if mybook.enable_lesson(lesson_id):
+                return jsonify({"lesson": lesson_id, "result": 'true'})
     return jsonify({"lesson": lesson_id, "result": 'false'})
 
 
-@api.route('/e/book/disable/<int:book_id>/<int:lesson_id>')
+@api.route('/e/lesson/disable/<int:lesson_id>')
 @login_required
-def disable_lesson(book_id, lesson_id):
-    mybook = current_user.english_books.filter(EnglishMyBook.book_id == book_id).one_or_none()
-    if mybook:
-        if mybook.disable_lesson(lesson_id):
-            return jsonify({"lesson": lesson_id, "result": 'true'})
+def disable_lesson(lesson_id):
+    lesson = EnglishLesson.query.filter_by(id=lesson_id).one_or_none()
+    if lesson:
+        mybook = current_user.english_books.filter(EnglishMyBook.book_id == lesson.book_id).one_or_none()
+        if mybook:
+            if mybook.disable_lesson(lesson_id):
+                return jsonify({"lesson": lesson_id, "result": 'true'})
     return jsonify({"lesson": lesson_id, "result": 'false'})

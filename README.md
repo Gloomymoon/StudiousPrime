@@ -1,5 +1,22 @@
 # StudiousPrime
 
+### version 0.5.1
+updated 2017-12-17
+
+**HB**
+
+1 增加Lesson类，修正选词功能
+
+2 修正了在没有选词情况下发生的部分页面错误
+
+3 修正了部分页面没有更新到Material Design的问题
+
+4 数据库切换为PostreSQL
+
+5 Achievements页面图标使用Material Design Icons
+
+6 重新调整了栏目和Exercises页面
+
 ### version 0.5 material-design
 updated 2016-11-26
 

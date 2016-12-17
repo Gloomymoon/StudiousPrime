@@ -3,6 +3,11 @@
 {% block title %}My Book - {{ book.title }}{% endblock %}
 {% block navbar_title %}
 <a href="{{ url_for('english.books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My Books</a>
+{% if mybook %}
+{% else %}
+<a href="{{ url_for('english.books', _anchor='new_books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My
+    Books</a>
+{% endif %}
 {% endblock %}
 {% block page_content %}
 
@@ -31,44 +36,50 @@
             </ul>
         </div>
     </div>
-<ul class="collection card">
-    {% for lesson in lessons %}
-    {% if mybook and lesson["selected"] == '1' %}
-    <li class="collection-item valign-wrapper">
-        {% else %}
-    <li class="collection-item blue-grey lighten-5 valign-wrapper">
-        {% endif %}
-        <div class="row valign-wrapper">
-            <div class="col s4">
-                Lesson {{ lesson["lesson"] }}
-            </div>
-            <div class="col s4">
-                <div class="chip"> {{ lesson["count"] }} Words</div>
-            </div>
-            <div class="col s4">
-                {% if mybook %}
-                <div class="switch">
-                    <label>
-                        {% if lesson["selected"] == '1' %}
-                        <input id="lesson{{ lesson['lesson'] }}" type="checkbox" data-book="{{ book.id }}"
-                               data-lesson="{{ lesson['lesson'] }}" checked>
-                        <span class="lever"></span>
-                        <strong class="light-blue-text text-lighten-1">On</strong>
-                        {% else %}
-                        <input id="lesson{{ lesson['lesson'] }}" type="checkbox" data-book="{{ book.id }}"
-                               data-lesson="{{ lesson['lesson'] }}">
-                        <span class="lever"></span>
-                        <strong class="">Off</strong>
-                        {% endif %}
-                    </label>
+    {% if not mybook %}
+    <div class="row center">
+        <a class="waves-effect waves-light btn light-blue lighten-1 waves-input-wrapper"
+           href="{{ url_for('english.add_book', id=book.id) }}">Add this book</a>
+    </div>
+    {% endif %}
+    <ul class="collection card">
+        {% for lesson in lessons %}
+        {% if mybook and mybook.lessons[lesson.number-1] and mybook.lessons[lesson.number-1] == '1' %}
+        <li class="collection-item valign-wrapper">
+            {% else %}
+        <li class="collection-item blue-grey lighten-5 valign-wrapper">
+            {% endif %}
+            <div class="row valign-wrapper">
+                <div class="col s4">
+                    {{ lesson.number }}. {{ lesson.title }}
                 </div>
-                {% endif %}
+                <div class="col s4">
+                    <div class="chip"> {{ len(lesson.words) }} Words</div>
+                </div>
+                <div class="col s4">
+                    {% if mybook %}
+                    <div class="switch">
+                        <label>
+                            {% if mybook and mybook.lessons[lesson.number-1] and mybook.lessons[lesson.number-1] == '1' %}
+                            <input id="lesson{{ lesson.id }}" type="checkbox" data-book="{{ book.id }}"
+                                   data-lesson="{{ lesson.id }}" checked>
+                            <span class="lever"></span>
+                            <strong class="light-blue-text text-lighten-1">On</strong>
+                            {% else %}
+                            <input id="lesson{{ lesson.id }}" type="checkbox" data-book="{{ book.id }}"
+                                   data-lesson="{{ lesson.id }}">
+                            <span class="lever"></span>
+                            <strong class="">Off</strong>
+                            {% endif %}
+                        </label>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
 
@@ -78,14 +89,14 @@
 $(document).ready(function() {
     $(".switch input").click(function(){
         if($(this).attr("checked")){
-            $.get('/api/e/book/enable/'+$(this).data("book") + '/' + $(this).data("lesson")).done(function (data) {
+            $.get('/api/e/lesson/enable/' + $(this).data("lesson")).done(function (data) {
                 //alert(data);
                 $("#lesson"+data.lesson).nextAll("strong").html("On").addClass("light-blue-text text-lighten-1")
                 .parents(".collection-item").removeClass("blue-grey lighten-5");
             });
         }
         else{
-            $.get('/api/e/book/disable/'+$(this).data("book") + '/' + $(this).data("lesson")).done(function (data) {
+            $.get('/api/e/lesson/disable/' + $(this).data("lesson")).done(function (data) {
                 //alert(data);
                 $("#lesson"+data.lesson).nextAll("strong").html("Off").removeClass("light-blue-text text-lighten-1")
                 .parents(".collection-item").addClass("blue-grey lighten-5");
@@ -93,6 +104,14 @@ $(document).ready(function() {
         }
     });
 });
+
+
+
+
+
+
+
+
 
 
 </script>

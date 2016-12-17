@@ -6,7 +6,7 @@ function nextword(){
             $("#chinese").html(data['chinese']);
             $("#example").html(data['example']);
             $("#book_title").html(data['book_title']);
-            $("#lesson").html('Lesson ' + data['lesson'])
+            $("#lesson").html(' ' + data['lesson'])
         });
 }
 

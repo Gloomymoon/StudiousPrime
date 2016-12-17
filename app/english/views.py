@@ -11,7 +11,10 @@ from .models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, 
 @english.route('/')
 @login_required
 def index():
-    newword = current_user.random_words(1, 1)[0]
+    newwords = current_user.random_words(1, 1)
+    newword = None
+    if newwords:
+        newword=newwords[0]
     error_words = current_user.error_words(number=5)
     return render_template('english/index.html', error_words=error_words, newword=newword)
 
@@ -78,19 +81,25 @@ def words():
     return render_template('english/words.html', words=words, pagination=pagination)
 
 
-@english.route('/exercise')
+@english.route('/exercise/new')
 @login_required
-def exercise():
+def new_exercise():
     #exercise = EnglishMyExercise.query.filter_by(user_id=current_user.id).filter(EnglishMyExercise.current<EnglishMyExercise.total).first()
-    exercises = [e for e in current_user.english_exercises if e.current < e.total]
+    exercises = [e for e in current_user.english_exercises if e.current < e.total and e.total > 0]
     if exercises:
         return redirect(url_for('english.do_exercise', id=exercises[0].id))
-    exercise = EnglishMyExercise(user_id=current_user.id, use_mask=current_user.english_setting.use_mask)
-    db.session.add(exercise)
-    db.session.commit()
+    exercise = current_user.english_exercises.filter(EnglishMyExercise.total == 0).one_or_none()
+    if not exercise:
+        exercise = EnglishMyExercise(user_id=current_user.id, use_mask=current_user.english_setting.use_mask)
+        db.session.add(exercise)
+        db.session.commit()
     if exercise.id:
         exercise.generate_questions()
-        return redirect(url_for('english.do_exercise', id=exercise.id))
+        if exercise.has_questions():
+            return redirect(url_for('english.do_exercise', id=exercise.id))
+        else:
+            flash('Not enough words to generate an exercise.')
+            return redirect(url_for('english.exercises'))
     abort(500)
 
 
@@ -127,9 +136,9 @@ def do_exercise(id):
     return render_template('english/do_exercise.html', form=form, exercise=exercise, myword=myword)
 
 
-@english.route('/evaluate/<int:id>')
+@english.route('/exercise/evaluate/<int:id>')
 @login_required
-def evaluate(id):
+def evaluate_exercise(id):
     exercise = EnglishMyExercise.query.filter_by(id=id).first_or_404()
 
     # if exercise is not finished
@@ -150,9 +159,9 @@ def evaluate(id):
     return redirect(url_for('english.exercise_result', id=id))
 
 
-@english.route('/results')
+@english.route('/exercises')
 @login_required
-def exercise_results():
+def exercises():
     page = request.args.get('page', 1, type=int)
     query = EnglishMyExercise.query
     pagination = query.order_by(EnglishMyExercise.finish_dt.desc()).paginate(
@@ -161,7 +170,7 @@ def exercise_results():
     return render_template('english/exercise_results.html', exercise=current_user.has_unfinished_exercise(), exercises=exercises, pagination=pagination)
 
 
-@english.route('/result/<int:id>')
+@english.route('/exercise/result/<int:id>')
 @login_required
 def exercise_result(id):
     exercise = EnglishMyExercise.query.filter_by(id=id).first_or_404()
@@ -172,19 +181,21 @@ def exercise_result(id):
 @login_required
 def achievements():
     achievement = {}
-    achievement['total_exercises'] = len([e for e in current_user.english_exercises if e.current >= e.total])
-    achievement['total_tested'] = sum([e.total for e in current_user.english_exercises if e.current >= e.total])
-    achievement['total_passed'] = sum([e.passed for e in current_user.english_exercises if e.current >= e.total])
-    achievement['total_full_score'] = len([e for e in current_user.english_exercises if e.current >= e.total and e.passed == e.total])
-    achievement['highest_score'] = max([e.passed * 1. /e.total for e in current_user.english_exercises if e.current >= e.total])
-    achievement['total_tested_words'] = len([w for w in current_user.english_words if w.tested > 0])
-    achievement['total_passed_words'] = len([w for w in current_user.english_words if w.passed > 0])
-    achievement['total_words'] = len(current_user.english_words.all())
-    achievement['level1_words'] = len([w for w in current_user.english_words if w.level == 1])
-    achievement['level2_words'] = len([w for w in current_user.english_words if w.level == 2])
-    achievement['level3_words'] = len([w for w in current_user.english_words if w.level == 3])
-    achievement['level4_words'] = len([w for w in current_user.english_words if w.level == 4])
-    achievement['level5_words'] = len([w for w in current_user.english_words if w.level == 5])
+    if len(current_user.english_exercises.filter(EnglishMyExercise.current >= EnglishMyExercise.total, EnglishMyExercise.total > 0).all()) > 0:
+        achievement['total_exercises'] = len([e for e in current_user.english_exercises if e.current >= e.total and e.total > 0])
+        achievement['total_tested'] = sum([e.total for e in current_user.english_exercises if e.current >= e.total and e.total > 0])
+        achievement['total_passed'] = sum([e.passed for e in current_user.english_exercises if e.current >= e.total and e.total > 0])
+        achievement['total_full_score'] = len([e for e in current_user.english_exercises if e.current >= e.total and e.total > 0 and e.passed == e.total])
+        achievement['highest_score'] = max([e.passed * 1. /e.total for e in current_user.english_exercises if e.current >= e.total and e.total > 0])
+    if len(current_user.english_words.all()) > 0:
+        achievement['total_tested_words'] = len([w for w in current_user.english_words if w.tested > 0])
+        achievement['total_passed_words'] = len([w for w in current_user.english_words if w.passed > 0])
+        achievement['total_words'] = len(current_user.english_words.all())
+        achievement['level1_words'] = len([w for w in current_user.english_words if w.level == 1])
+        achievement['level2_words'] = len([w for w in current_user.english_words if w.level == 2])
+        achievement['level3_words'] = len([w for w in current_user.english_words if w.level == 3])
+        achievement['level4_words'] = len([w for w in current_user.english_words if w.level == 4])
+        achievement['level5_words'] = len([w for w in current_user.english_words if w.level == 5])
 
     return render_template('english/achievements.html', achievement=achievement)
 
@@ -258,9 +269,9 @@ def view_book(id):
     mybook = EnglishMyBook.query.filter(and_(EnglishMyBook.book_id == id, EnglishMyBook.user_id == current_user.id)).first()
     if not mybook:
         book = EnglishBook.query.filter(EnglishBook.id == id).first_or_404()
-        lessons = book.get_lessons()
+        lessons = book.lessons
     else:
         book = mybook.book
-        lessons = mybook.get_lessons()
+        lessons = mybook.book.lessons
     return render_template("english/book.html", mybook=mybook, book=book, lessons=lessons)
 

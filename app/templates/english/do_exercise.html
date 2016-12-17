@@ -2,15 +2,18 @@
 
 {% block title %}English Exercise{% endblock %}
 {% block navbar_title %}
-<a href="{{ url_for('english.exercise') }}" class="brand-logo">Exercise</a>
+<a href="{{ url_for('english.exercises') }}" class="brand-logo">Exercise</a>
 {% endblock %}
 
 {% block flash_content %}
 <div class="progress exercise light-blue lighten-4 z-depth-1">
     {% if exercise.current > 0 %}
-    <div class="determinate right-align white-text light-blue lighten-1" style="width: {{ exercise.current / exercise.total * 100}}%;">{{ exercise.current }}</div>
+    <div class="determinate right-align white-text light-blue lighten-1"
+         style="width: {{ exercise.current / exercise.total * 100}}%;">{{ exercise.current }}
+    </div>
     {% endif %}
-    <div style="margin-left:{{ exercise.current / exercise.total * 100}}%;">{{ exercise.total - exercise.current }}</div>
+    <div style="margin-left:{{ exercise.current / exercise.total * 100}}%;">{{ exercise.total - exercise.current }}
+    </div>
     <!-- div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0"
          aria-valuemax="100" style="width:{{ exercise.current / exercise.total * 100}}%">
         <span class="sr-only"></span><span class="pull-right">{{ exercise.current }}&nbsp;</span>
@@ -39,7 +42,8 @@
                 {% endif %}
             </div>
         </div>
-        <h4><i class="light-blue-text text-lighten-1 material-icons prefix">g_translate</i> {{ myword.word.chinese }}</h4>
+        <h4><i class="light-blue-text text-lighten-1 material-icons prefix">g_translate</i> {{ myword.word.chinese }}
+        </h4>
         <div class="row">
             <div class="col s12">
                 {% if myword.word and myword.word.example %}
@@ -51,7 +55,8 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <button class="btn btn-large waves-effect waves-light light-blue lighten-1" type="submit" name="action">Next
+                <button class="btn btn-large waves-effect waves-light light-blue lighten-1" type="submit" name="action">
+                    Next
                     <i class="material-icons right">send</i>
                 </button>
             </div>
@@ -86,6 +91,7 @@ $.fn.setCursorPosition = function(pos) {
                 clearMaskOnLostFocus: false
             }).focus().setCursorPosition(0);
         });
+
 
 
 

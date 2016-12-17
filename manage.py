@@ -3,7 +3,7 @@
 import os
 from app import create_app, db
 from app.main.models import User, Role
-from app.english.models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, EnglishSetting
+from app.english.models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, EnglishSetting, EnglishLesson
 from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
 
@@ -61,25 +61,40 @@ def init_app_data():
     db.session.add(s)
     db.session.commit()
 
+    l1 = []
+    l2 = []
+    l3 = []
+    l4 = []
+    for i in range(10):
+        l1.append(EnglishLesson(number=i + 1, book_id=b1.id, title='M1L' + str(i + 1)))
+        l2.append(EnglishLesson(number=i + 1, book_id=b2.id, title='M2L' + str(i + 1)))
+        l3.append(EnglishLesson(number=i + 1, book_id=b3.id, title='M3L' + str(i + 1)))
+        l4.append(EnglishLesson(number=i + 1, book_id=b4.id, title='M4L' + str(i + 1)))
+        db.session.add(l1[i])
+        db.session.add(l2[i])
+        db.session.add(l3[i])
+        db.session.add(l4[i])
+        db.session.commit()
+
     for i in range(50):
-        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 1), example='Test Example', book_id=b1.id,
-                        lesson=i / 10 + 1)
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 1), example='Test Example',
+                        lesson_id=l1[i/5].id)
         db.session.add(w)
         db.session.commit()
     for i in range(50):
-        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 51), example='Test Example', book_id=b2.id,
-                        lesson=i / 10 + 1)
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 51), example='Test Example',
+                        lesson_id=l2[i/5].id)
         db.session.add(w)
         db.session.commit()
 
     for i in range(50):
-        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 101), example='Test Example', book_id=b3.id,
-                        lesson=i / 10 + 1)
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 101), example='Test Example',
+                        lesson_id=l3[i/5].id)
         db.session.add(w)
         db.session.commit()
 
     for i in range(50):
-        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 151), example='Test Example', book_id=b4.id,
-                        lesson=i / 10 + 1)
+        w = EnglishWord(english='test', chinese=u'测试中文' + str(i + 151), example='Test Example',
+                        lesson_id=l4[i/5].id)
         db.session.add(w)
         db.session.commit()

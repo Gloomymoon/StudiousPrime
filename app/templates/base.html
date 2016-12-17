@@ -11,43 +11,45 @@
 
 {% block navbar %}
 <header>
-<nav class="light-blue lighten-1 {% block nav_class %}{% endblock %}" role="navigation">
-    <div class="nav-wrapper container">
+    <nav class="light-blue lighten-1 {% block nav_class %}{% endblock %}" role="navigation">
+        <div class="nav-wrapper container">
         <span class="brand-logo">
         {% block navbar_title %}{% endblock %}
         </span>
-        <a href="#" data-activates="slide-out" class="button-collapse right"><i class="material-icons">menu</i></a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            {% block navbar_content %}{% endblock %}
-        </ul>
-        <ul class="side-nav" id="slide-out">
-            <li>
-                <div class="userView light-blue lighten-1">
-                    <!-- div class="background">
-                        <img src="images/office.jpg">
-                    </div>
-                    <a href="#!user"><img class="circle" src="images/yuna.jpg"></a -->
-                    <a href="#!name"><span class="white-text name">
+            <a href="#" data-activates="slide-out" class="button-collapse right"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% block navbar_content %}{% endblock %}
+            </ul>
+            <ul class="side-nav" id="slide-out">
+                <li>
+                    <div class="userView light-blue lighten-1">
+                        <!-- div class="background">
+                            <img src="images/office.jpg">
+                        </div>
+                        <a href="#!user"><img class="circle" src="images/yuna.jpg"></a -->
+                        <a href="#!name"><span class="white-text name">
                         {% if current_user %}{{ current_user.name }}{% else %}Guest{% endif %}
                     </span></a>
-                    {% if current_user %}
-                    <a href="#!email"><span class="white-text email">{{ current_user.email }}</span></a>
-                    {% endif %}
-                </div>
-            </li>
-            {% block sidenav_content %}{% endblock %}
-        </ul>
-        {% block navbar_tabs %}{% endblock %}
-    </div>
-</nav>
-{% block flash_content %}
+                        {% if current_user %}
+                        <a href="#!email"><span class="white-text email">{{ current_user.email }}</span></a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% block sidenav_content %}{% endblock %}
+            </ul>
+            {% block navbar_tabs %}{% endblock %}
+        </div>
+    </nav>
+    {% block flash_content %}
+    <!--
 {% for message in get_flashed_messages() %}
 <div class="alert alert-warning text-center">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     {{ message }}
 </div>
 {% endfor %}
-{% endblock %}
+-->
+    {% endblock %}
 </header>
 {% endblock %}
 
@@ -66,7 +68,8 @@
     <div class="footer-copyright">
         <div class="container">
             © 2016 Gloomymoon
-            <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right" href="#!"><i class="material-icons">help_outline</i></a>
+            <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right" href="#!"><i
+                    class="material-icons">help_outline</i></a>
         </div>
     </div>
 </footer>
@@ -97,6 +100,11 @@ $(document).ready(function() {
         closeOnClick: true,
         draggable: true
     });
+    {% for message in get_flashed_messages() %}
+        Materialize.toast('{{ message }}', 4000);
+    {% endfor %}
+
 });
+
 </script>
 {% endblock %}

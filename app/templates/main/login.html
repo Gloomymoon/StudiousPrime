@@ -2,20 +2,37 @@
 {% import "material/wtf.html" as wtf %}
 
 {% block title %}Login{% endblock %}
+{% block navbar_title %}
+<a href="#" class="brand-logo">Login</a>
+{% endblock %}
 
 {% block page_content %}
-<div class="col-md-6 col-md-offset-3">
-    <div class="page-header">
-        <h3>Login
-        </h3>
-    </div>
-    <form class="form" method="POST">
+<div class="section">
+    <form class="" method="post" id="login">
         {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.username, class='form-control input-icon input-icon-user') }}
-        {{ wtf.form_field(form.password, class='form-control input-icon input-icon-password') }}
-        {{ wtf.form_field(form.remember_me) }}
-        {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+        <div class="row">
+            <div class="input-field col s12">
+                {{ form.username(class="validate") }}
+                {{ form.username.label() }}
+            </div>
+
+            <div class="input-field col s12">
+                {{ form.password(class="validate") }}
+                {{ form.password.label() }}
+            </div>
+            <div class="input-field col s12">
+                {{ form.remember_me() }}
+                {{ form.remember_me.label() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 center">
+                {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
+            </div>
+        </div>
     </form>
+
+    <!--p class="center-align">Or <u><a href=" {{ url_for('main.register') }}" class="">register</a></u> for free</p -->
 </div>
 {% endblock %}
 

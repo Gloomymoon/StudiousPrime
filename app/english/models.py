@@ -30,9 +30,11 @@ class EnglishBook(db.Model):
     title = db.Column(db.String(200))
     image = db.Column(db.String(200))
     description = db.Column(db.String(1000))
-    words = db.relationship('EnglishWord', back_populates="book", lazy='dynamic')
+    #words = db.relationship('EnglishWord', back_populates="book", lazy='dynamic')
     mybooks = db.relationship('EnglishMyBook', back_populates="book")
+    lessons = db.relationship('EnglishLesson', back_populates="book")
 
+    '''
     def get_lessons(self):
         lessons = db.session.query(EnglishWord.lesson, func.count("*").label("word_count")). \
             filter(EnglishWord.book_id == self.id). \
@@ -41,6 +43,7 @@ class EnglishBook(db.Model):
         for index, row in enumerate(lessons):
             result.append({"lesson": row[0], "count": row[1]})
         return result
+    '''
 
 
 class EnglishMyBook(db.Model):
@@ -55,7 +58,7 @@ class EnglishMyBook(db.Model):
     user = db.relationship('User', back_populates="english_books")
 
     def word_count(self):
-        return len(self.book.words.all())
+        return sum([len(l.words) for l in self.book.lessons ])
 
     def add_word(self, word_id):
         if not self.user.english_words.filter(EnglishMyWord.word_id == word_id).one_or_none():
@@ -66,12 +69,14 @@ class EnglishMyBook(db.Model):
         """
         When books first added to a user, generate all the MyWords.
         """
-        for word in self.book.words:
-            self.add_word(word.id)
+        for lesson in self.book.lessons:
+            for word in lesson.words:
+                self.add_word(word.id)
         db.session.commit()
 
+    '''
     def get_lessons(self):
-        l = self.book.get_lessons()
+        l = self.book.lessons.all()
         if len(self.lessons) < len(l):
             self.lessons += '0' * (len(l) - len(self.lessons))
             db.session.commit()
@@ -79,46 +84,64 @@ class EnglishMyBook(db.Model):
         for index, row in enumerate(l):
             result.append({"lesson": row["lesson"], "count": row["count"], "selected": self.lessons[index]})
         return result
+    '''
 
     def get_levels(self):
         levels = db.session.query(EnglishMyWord.level, func.count("*").label("word_count")). \
             join(EnglishMyWord.word).\
-            filter(EnglishWord.book_id == self.book_id, EnglishMyWord.user_id == self.user_id).\
+            join(EnglishWord.lesson).\
+            filter(EnglishLesson.book_id == self.book_id, EnglishMyWord.user_id == self.user_id).\
             group_by(EnglishMyWord.level).order_by(EnglishMyWord.level).all()
         return levels
 
     def enable_lesson(self, lesson_id):
-        if len(self.lessons) < lesson_id:
-            self.lessons += '0' * (lesson_id - len(self.lessons))
-        self.lessons = self.lessons[:max(0, lesson_id-1)] + '1' + self.lessons[lesson_id:]
-        mywords = self.user.english_words.join(EnglishMyWord.word).filter(EnglishWord.lesson == lesson_id).all()
-        for myword in mywords:
-            myword.selected = True
-        db.session.commit()
-        return True
+        lesson = EnglishLesson.query.filter_by(id=lesson_id).one_or_none()
+        if lesson:
+            if len(self.lessons) < lesson.number:
+                self.lessons += '0' * (lesson.number - len(self.lessons))
+            self.lessons = self.lessons[:max(0, lesson.number-1)] + '1' + self.lessons[lesson.number:]
+            mywords = self.user.english_words.join(EnglishMyWord.word).filter(EnglishWord.lesson_id == lesson_id).all()
+            for myword in mywords:
+                myword.selected = True
+            db.session.commit()
+            return True
+        return False
 
     def disable_lesson(self, lesson_id):
-        if len(self.lessons) < lesson_id:
-            self.lessons += '0' * (lesson_id - len(self.lessons))
-        self.lessons = self.lessons[:max(0, lesson_id-1)] + '0' + self.lessons[lesson_id:]
-        mywords = self.user.english_words.join(EnglishMyWord.word).filter(EnglishWord.lesson == lesson_id).all()
-        for myword in mywords:
-            myword.selected = False
-        db.session.commit()
-        return True
+        lesson = EnglishLesson.query.filter_by(id=lesson_id).one_or_none()
+        if lesson:
+            if len(self.lessons) < lesson.number:
+                self.lessons += '0' * (lesson.number - len(self.lessons))
+            self.lessons = self.lessons[:max(0, lesson.number-1)] + '0' + self.lessons[lesson.number:]
+            mywords = self.user.english_words.join(EnglishMyWord.word).filter(EnglishWord.lesson_id == lesson_id).all()
+            for myword in mywords:
+                myword.selected = False
+            db.session.commit()
+            return True
+        return False
+
+class EnglishLesson(db.Model):
+    __tablename__ = 'english_lessons'
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('english_books.id'), index=True)
+    number = db.Column(db.Integer, index=True)
+    title = db.Column(db.String(100))
+    book = db.relationship('EnglishBook', back_populates="lessons")
+    words = db.relationship('EnglishWord', back_populates="lesson")
+
 
 class EnglishWord(db.Model):
     __tablename__ = 'english_words'
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('english_books.id'), index=True)
-    lesson = db.Column(db.Integer, default=0, index=True)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('english_lessons.id'), index=True)
     english = db.Column(db.String(50), index=True)
     chinese = db.Column(db.String(200))
     example = db.Column(db.String(2000))
     create = db.Column(db.DateTime(), default=datetime.utcnow)
     update = db.Column(db.DateTime(), default=datetime.utcnow)
     mywords = db.relationship('EnglishMyWord', back_populates='word')
-    book = db.relationship('EnglishBook', back_populates="words")
+    #book = db.relationship('EnglishBook', back_populates="words")
+    lesson = db.relationship('EnglishLesson', back_populates="words")
 
 
 class EnglishMyWord(db.Model):
@@ -177,8 +200,9 @@ class EnglishMyWord(db.Model):
             'word_id': self.word_id,
             'user_id': self.user_id,
             'book_id': self.word.book_id,
-            'book_title': self.word.book.title,
-            'lesson': self.word.lesson,
+            'book_title': self.word.lesson.book.title,
+            'lesson_id': self.word.lesson_id,
+            'lesson': self.word.lesson.lesson_title,
             'english': self.word.english,
             'chinese': self.word.chinese,
             'example': self.word.example,

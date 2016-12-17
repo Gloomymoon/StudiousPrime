@@ -37,8 +37,10 @@
             <tr>
                 <td class="center-align valign-wrapper"><i class="material-icons">functions</i></td>
                 <td class="center-align">
+                    {% if achievement["total_tested"] %}
                     {{
                     "%2.1f" % (achievement["total_passed"] / achievement["total_tested"] * 100)}}
+                    {% endif %}
                 </td>
                 <td>Average <strong class=" ">SCORE</strong></td>
             </tr>
@@ -49,7 +51,8 @@
             </tr>
             <tr>
                 <td class="center-align valign-wrapper"><i class="material-icons">publish</i></td>
-                <td class="center-align">{{ "%2.1f" % (achievement["highest_score"] * 100) }}</td>
+                <td class="center-align">{% if achievement["highest_score"] %}
+                    {{ "%2.1f" % (achievement["highest_score"] * 100) }}{% endif %}</td>
                 <td>Highest <strong class="">SCORE</strong></td>
             </tr>
             </tbody>
@@ -75,17 +78,21 @@
             </tr>
             <tr>
                 <td class="center-align valign-wrapper"><i class="material-icons">tonality</i></span></td>
-                <td class="center-align">{{ "%2.2f" % (achievement["total_tested_words"] / achievement["total_words"]
+                <td class="center-align">{% if achievement["total_words"] %}
+                    {{ "%2.2f" % ((achievement["total_tested_words"] or 0) / achievement["total_words"]
                     *100)
                     }}%
+                    {% endif %}
                 </td>
                 <td>Tested words coverage</td>
             </tr>
             <tr>
                 <td class="center-align valign-wrapper"><i class="material-icons">timelapse</i></td>
-                <td class="center-align">{{ "%2.2f" % (achievement["total_passed_words"] / achievement["total_words"]
+                <td class="center-align">{% if achievement["total_words"] %}
+                    {{ "%2.2f" % ((achievement["total_passed_words"] or 0) / achievement["total_words"]
                     *100)
                     }}%
+                    {% endif %}
                 </td>
                 <td>Passed words coverage</td>
             </tr>

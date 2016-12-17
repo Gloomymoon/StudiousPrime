@@ -10,17 +10,28 @@
         <!-- div class="progress light-blue lighten-4">
             <div class="indeterminate light-blue lighten-1"></div>
         </div -->
+        {% if newword %}
         <h2 id="english">{{ newword.word.english }}</h2>
         <h4 id="chinese">{{ newword.word.chinese }}</h4>
         <p id="example" class="grey-text">{{ newword.word.example }}</p>
         <a id="next" class="right btn-floating btn-large waves-effect waves-light red lighten-1" href="#">
             <i class="material-icons">refresh</i>
             Next</a>
+        {% else %}
+        <p>You have no new word yet.<br/>
+            Go to <a href="{{ url_for('english.books', _anchor='new_books') }}">Books</a> page and add a new book.</p>
+        {% endif %}
     </div>
     <div class="card-action">
         <div class="valign-wrapper">
-        <i class="material-icons">import_contacts</i><span id="book_title">{{ newword.word.book.title }}</span>&nbsp;<span class="right-align grey-text" id="lesson">Lesson {{ newword.word.lesson }}</span>
-    </div>
+            {% if newword %}
+            <i class="material-icons">import_contacts</i><span id="book_title">{{ newword.word.lesson.book.title }}</span>&nbsp;<span
+                class="right-align grey-text" id="lesson"> {{ newword.word.lesson.lesson_title }}</span>
+            {% else %}
+            <a style="width:100%;" class="btn btn-flat waves-effect grey lighten-4"
+               href="{{ url_for('english.books', _anchor='new_books') }}">Add New Book</a>
+            {% endif %}
+        </div>
     </div>
 
 </div>
@@ -35,7 +46,7 @@
                 class="col s5 grey-text">{{ error_word.word.chinese }}</span>
             <span class="col s2 grey-text"><i class="material-icons center">arrow_drop_down</i></span></div>
         <div class="collapsible-body grey lighten-4"><p class="grey-text"><span>{{ error_word.word.example }}</span>
-        <span class="right right-align">errors: {{ error_word.tested - error_word.passed }}</span></p></div>
+            <span class="right right-align">errors: {{ error_word.tested - error_word.passed }}</span></p></div>
     </li>
     {% endfor %}
     {% endif %}
