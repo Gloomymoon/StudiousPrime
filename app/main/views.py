@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, request, flash, abort
 from flask_login import login_user, login_required, logout_user, current_user
 from . import main
+from .. import db
 from models import User
 from forms import LoginForm, RegistrationForm
 
@@ -39,14 +40,14 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data,
+        user = User(name=form.username.data,
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
         # token = user.generate_confirmation_token()
         # send_email(user.email, 'Confirm Your Account',
         #            'auth/email/confirm', user=user, token=token)
-        # flash('A confirmation email has been sent to you by email.')
+        flash('Welcome ' + user.name + '.')
         return redirect(url_for('main.login'))
     return render_template('main/register.html', form=form)
 

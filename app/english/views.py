@@ -291,3 +291,9 @@ def view_book(id):
         book = mybook.book
         lessons = mybook.book.lessons
     return render_template("english/book.html", mybook=mybook, book=book, lessons=lessons)
+
+
+@english.route("/help")
+@login_required
+def help():
+    return render_template("english/help.html")

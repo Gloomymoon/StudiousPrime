@@ -27,9 +27,12 @@ nav .button-collapse {
     padding: 0;
 }
 
-.card.grid-book .card-image img, .card.grid-book .card-stacked {
+.card.grid-book .card-image img {
     height: 120px;
     width: auto;
+}
+.card.grid-book .card-stacked {
+    border-left: 1px solid rgba(160,160,160,0.2);
 }
 
 @media only screen and (min-width: 601px){
@@ -46,6 +49,7 @@ nav .button-collapse {
 }
 .card.grid-book .card-action a.btn {
     margin: 0;
+    width: 45%;
 }
 .card.grid-book .card-action a.v-line {
     width: 1px;
@@ -109,9 +113,10 @@ footer.page-footer .footer-copyright .btn-floating {
 
 #answer {
     Letter-spacing: 4px;
-    font-size: 400%;
+    font-size: 3rem;
     height: auto;
     font-family: monospace;
+    letter-spacing: 2px;
 }
 #answer, #answer:focus {
     border-width: 0;
@@ -194,4 +199,8 @@ main {
 .tabs .tab .material-icons {
     height: 48px;
     line-height: 48px;
+}
+
+form .input-field p.error-info {
+    margin-top: -20px;
 }

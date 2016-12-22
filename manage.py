@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
 
 
-def add_book(title, description="", image=""):
+def add_book(title, description="", image="images/english/default.png"):
     b = EnglishBook.query.filter(EnglishBook.title == title).first()
     if not b:
         b = EnglishBook(title=title, description=description, image=image)
@@ -103,6 +103,8 @@ def init_app_data():
 
     add_book("Oxford 3A", "Oxford 3A")
     import_words("Oxford3A.csv")
+    add_book("WTE 3A", "Longman Welcome to English 3A")
+    import_words("WTE3A.csv")
 
     '''
     b1 = EnglishBook(title=u'Side By Side I', description=u'《朗文国际英语教程》第一册', image="images/english/sbs1.png")

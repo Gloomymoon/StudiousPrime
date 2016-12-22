@@ -19,7 +19,7 @@
         <div class="row">
             {% if mybooks %}
             {% for mybook in mybooks %}
-            <div class="col l5 card horizontal hoverable grid-book sticky-action">
+            <div class="col s12 l5 card horizontal hoverable grid-book sticky-action">
                 <div class="card-image waves-effect waves-light">
                     {% if mybook.book.image %}
                     <image class="activator" src="{{ url_for('static', filename=mybook.book.image) }}"></image>
@@ -28,7 +28,7 @@
                 <div class="card-stacked">
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4">{{ mybook.book.title }}</span>
-                        <p class="truncate">{{ mybook.book.description }}</p>
+                        <p class="">{{ mybook.book.description }}</p>
                     </div>
                     <div class="card-action center-align">
                         <a class="btn btn-flat waves-effect waves-light"
@@ -48,7 +48,7 @@
         <div class="row">
             {% if books %}
             {% for book in books %}
-            <div class="col l5 card horizontal hoverable grid-book">
+            <div class="col s12 l5 card horizontal hoverable grid-book">
                 <div class="card-image waves-effect waves-light">
                     {% if book.image %}
                     <image class="activator" src="{{ url_for('static', filename=book.image) }}"></image>
@@ -57,17 +57,20 @@
                 <div class="card-stacked">
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4">{{ book.title }}</span>
-                        <p class="truncate">{{ book.description }}</p>
+                        <p class="">{{ book.description }}</p>
                     </div>
 
                     <div class="card-action center-align">
                         <span>
-                        <a class="btn btn-flat" href="{{ url_for('english.view_book', id=book.id)}}">View</a>
-                            </span><span>
-                        <a href="#" class="btn btn-flat v-line"></a></span>
+                            <a class="btn btn-flat waves-effect waves-light"
+                               href="{{ url_for('english.view_book', id=book.id)}}">View</a>
+                        </span>
                         <span>
-                        <a class="btn btn-flat waves-effect waves-light"
-                           href="{{ url_for('english.add_book', id=book.id)}}">Add</a></span>
+                            <a href="#" class="btn btn-flat v-line"></a></span>
+                        <span>
+                            <a class="btn btn-flat waves-effect waves-light"
+                               href="{{ url_for('english.add_book', id=book.id)}}">Add</a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -79,8 +82,8 @@
 </div>
 <div id="search" class="col s12">
     <div class="section">
-        </div>
     </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -88,5 +91,8 @@
 <script>
 $(document).ready(function(){
 });
+
+
+
 </script>
 {% endblock %}
