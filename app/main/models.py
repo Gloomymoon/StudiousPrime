@@ -48,7 +48,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(200), index=True, default="")
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(128), default="111111")
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     confirmed = db.Column(db.Boolean, default=True)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
