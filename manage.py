@@ -40,6 +40,20 @@ def init_app_data():
     db.create_all()
 
     Role.insert_roles()
+
+    u = User(name='Gloomymoon', role=Role.query.filter_by(permissions=0xff).first())
+    db.session.add(u)
+    u2 = User(name='Haoer', role=Role.query.filter_by(permissions=0xff).first())
+    db.session.add(u2)
+    u3 = User(name='David', role=Role.query.filter_by(name="Knight").first())
+    db.session.add(u3)
+    db.session.commit()
+
+    s = EnglishSetting(user_id=u3.id, level1=12, level2=8, level3=3, level4=2)
+    db.session.add(s)
+    db.session.commit()
+
+    '''
     b1 = EnglishBook(title=u'Side By Side I', description=u'《朗文国际英语教程》第一册', image="images/english/sbs1.png")
     b2 = EnglishBook(title=u'Side By Side II', description=u'《朗文国际英语教程》第二册', image="images/english/sbs2.png")
     b3 = EnglishBook(title=u'Side By Side III', description=u'《朗文国际英语教程》第三册', image="images/english/sbs3.png")
@@ -48,18 +62,6 @@ def init_app_data():
     db.session.add(b2)
     db.session.add(b3)
     db.session.add(b4)
-    db.session.commit()
-
-    u = User(name='Dad', role=Role.query.filter_by(permissions=0xff).first())
-    db.session.add(u)
-    u2 = User(name='Mum', role=Role.query.filter_by(permissions=0xff).first())
-    db.session.add(u2)
-    u3 = User(name='David', role=Role.query.filter_by(name="Knight").first())
-    db.session.add(u3)
-    db.session.commit()
-
-    s = EnglishSetting(user_id=u3.id, level1=12, level2=8, level3=3, level4=2)
-    db.session.add(s)
     db.session.commit()
 
     l1 = []
@@ -99,7 +101,7 @@ def init_app_data():
                         lesson_id=l4[i/5].id)
         db.session.add(w)
         db.session.commit()
-
+    '''
 
 def add_book(title, description="", image=""):
     b = EnglishBook.query.filter(EnglishBook.title == title).first()
