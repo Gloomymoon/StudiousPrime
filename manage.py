@@ -119,7 +119,7 @@ def import_words(filename):
     basedir = sys.path[0]
     if os.path.isfile(basedir):
         basedir = os.path.dirname(basedir)
-    basedir = os.path.join(basedir, "doc")
+    basedir = os.path.join(basedir, "app/static/doc")
     b = None
     if os.path.isfile(os.path.join(basedir, filename)):
         with open(os.path.join(basedir, filename), 'rb') as csvfile:
