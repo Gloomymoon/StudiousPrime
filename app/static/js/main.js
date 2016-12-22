@@ -6,7 +6,7 @@ function nextword(){
             $("#chinese").html(data['chinese']);
             $("#example").html(data['example']);
             $("#book_title").html(data['book_title']);
-            $("#lesson").html(' ' + data['lesson'])
+            $("#lesson").html(' ' + data['lesson_title'])
         });
 }
 
@@ -26,7 +26,7 @@ $(document).ready(function() {
     var myChart = echarts.init(document.getElementById('summary'));
     myChart.setOption({
         title: {
-            text: 'Accumulate accuracy',
+            text: '',
             x: 'center'
         },
         tooltip: {},

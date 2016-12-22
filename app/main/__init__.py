@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, current_app
 
 main = Blueprint('main', __name__)
 
@@ -20,6 +20,12 @@ def inject_enumerate():
 def inject_str():
     return dict(str=str)
 
+
 @main.app_context_processor
 def inject_len():
     return dict(len=len)
+
+
+@main.app_context_processor
+def inject_len():
+    return dict(current_app=current_app)

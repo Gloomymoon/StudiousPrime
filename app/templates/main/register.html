@@ -1,8 +1,8 @@
 {% extends "main/base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 {% block navbar_title %}
-<a href="#" class="brand-logo">Login</a>
+<a href="#" class="brand-logo">Register</a>
 {% endblock %}
 
 {% block page_content %}
@@ -14,15 +14,19 @@
                 {{ form.username(class="validate") }}
                 {{ form.username.label() }}
             </div>
-
+            <div class="input-field col s12">
+                {{ form.email(class="validate") }}
+                {{ form.email.label() }}
+            </div>
             <div class="input-field col s12">
                 {{ form.password(class="validate") }}
                 {{ form.password.label() }}
             </div>
             <div class="input-field col s12">
-                {{ form.remember_me() }}
-                {{ form.remember_me.label() }}
+                {{ form.password2(class="validate") }}
+                {{ form.password2.label() }}
             </div>
+
         </div>
         <div class="row">
             <div class="input-field col s12 center">
@@ -30,8 +34,6 @@
             </div>
         </div>
     </form>
-
-    <!--p class="center-align">Or <u><a href=" {{ url_for('main.register') }}" class="">register</a></u> for free</p -->
 </div>
 {% endblock %}
 

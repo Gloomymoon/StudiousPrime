@@ -19,9 +19,11 @@
         <div class="row">
             {% if mybooks %}
             {% for mybook in mybooks %}
-            <div class="col m5 card horizontal hoverable grid-book sticky-action">
+            <div class="col l5 card horizontal hoverable grid-book sticky-action">
                 <div class="card-image waves-effect waves-light">
+                    {% if mybook.book.image %}
                     <image class="activator" src="{{ url_for('static', filename=mybook.book.image) }}"></image>
+                    {% endif %}
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
@@ -35,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col m1"></div>
+            <div class="col l1"></div>
             {% endfor %}
             {% endif %}
         </div>
@@ -46,9 +48,11 @@
         <div class="row">
             {% if books %}
             {% for book in books %}
-            <div class="col m5 card horizontal hoverable grid-book">
+            <div class="col l5 card horizontal hoverable grid-book">
                 <div class="card-image waves-effect waves-light">
+                    {% if book.image %}
                     <image class="activator" src="{{ url_for('static', filename=book.image) }}"></image>
+                    {% endif %}
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
@@ -57,14 +61,17 @@
                     </div>
 
                     <div class="card-action center-align">
+                        <span>
                         <a class="btn btn-flat" href="{{ url_for('english.view_book', id=book.id)}}">View</a>
-                        <a href="#" class="btn btn-flat v-line"></a>
+                            </span><span>
+                        <a href="#" class="btn btn-flat v-line"></a></span>
+                        <span>
                         <a class="btn btn-flat waves-effect waves-light"
-                           href="{{ url_for('english.add_book', id=book.id)}}">Add</a>
+                           href="{{ url_for('english.add_book', id=book.id)}}">Add</a></span>
                     </div>
                 </div>
             </div>
-            <div class="col m1"></div>
+            <div class="col l1"></div>
             {% endfor %}
             {% endif %}
         </div>

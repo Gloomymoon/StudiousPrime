@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*
-import os
+import os, sys
+import csv
 from app import create_app, db
 from app.main.models import User, Role
 from app.english.models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, EnglishSetting, EnglishLesson
@@ -98,3 +99,50 @@ def init_app_data():
                         lesson_id=l4[i/5].id)
         db.session.add(w)
         db.session.commit()
+
+
+def add_book(title, description="", image=""):
+    b = EnglishBook.query.filter(EnglishBook.title == title).first()
+    if not b:
+        b = EnglishBook(title=title, description=description, image=image)
+        db.session.add(b)
+        db.session.commit()
+        print "Book [" + title + "] added."
+
+
+def import_words(filename):
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+    basedir = sys.path[0]
+    if os.path.isfile(basedir):
+        basedir = os.path.dirname(basedir)
+    basedir = os.path.join(basedir, "doc")
+    b = None
+    if os.path.isfile(os.path.join(basedir, filename)):
+        with open(os.path.join(basedir, filename), 'rb') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',')
+            for line in reader:
+                print line
+                if len(line) < 6:
+                    line.append('')
+                if not b or b.title != line[0]:
+                    b = EnglishBook.query.filter(EnglishBook.title==line[0]).first()
+                if not b:
+                    print "Can not find book [" + line[0] + "], please add book first."
+                    exit()
+                    # b = EnglishBook(title=line[0], description=line[0])
+                    # db.session.add(b)
+                    # db.session.commit()
+                l = EnglishLesson.query.filter(EnglishLesson.book_id == b.id, EnglishLesson.title == line[2]).first()
+                if not l:
+                    l = EnglishLesson(title=line[2], number=line[1], book_id=b.id)
+                    db.session.add(l)
+                    db.session.commit()
+                w = EnglishWord.query.filter(EnglishWord.lesson_id == l.id, EnglishWord.english == line[3]).first()
+                if not w:
+                    w = EnglishWord(english=line[3], chinese=unicode(line[4]), example=line[5],
+                                    lesson_id=l.id)
+                    db.session.add(w)
+                    db.session.commit()
+                    print line[0], line[1], line[2], line[3], line[4], " Add"

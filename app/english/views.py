@@ -5,7 +5,8 @@ from sqlalchemy import and_, not_
 from . import english
 from app import db
 from .forms import NewWordForm, EditWordForm, QuestionForm, LevelSettingForm
-from .models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, EnglishSetting, EnglishMyBook
+from .models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, \
+    EnglishSetting, EnglishMyBook, EnglishLesson
 
 
 @english.route('/')
@@ -74,11 +75,27 @@ def edit_word(id):
 @login_required
 def words():
     page = request.args.get('page', 1, type=int)
+    book_id = request.args.get('book', 0, type=int)
+    lesson_number = request.args.get('lesson', 0, type=int)
     query = EnglishWord.query
-    pagination = query.order_by(EnglishWord.id.desc()).paginate(
+    my_query = current_user.english_words
+    book = EnglishBook.query.filter_by(id=book_id).first()
+    lesson = EnglishLesson.query.filter(EnglishLesson.book_id == book.id, EnglishLesson.number == lesson_number).first()
+    if book:
+        query = query.join(EnglishWord.lesson).filter(EnglishLesson.book_id == book.id)
+        my_query = my_query.join(EnglishMyWord.word).join(EnglishWord.lesson).filter(EnglishLesson.book_id == book.id)
+    if lesson:
+        query = query.join(EnglishWord.lesson).filter(EnglishLesson.number == lesson.number)
+        my_query = my_query.join(EnglishMyWord.word).join(EnglishWord.lesson).filter(EnglishLesson.number == lesson.number)
+    pagination = query.order_by(EnglishWord.id.asc()).paginate(
+        page, per_page=current_app.config["WORDS_PER_PAGE"], error_out=False)
+    my_pagination = my_query.order_by(EnglishMyWord.word_id.asc()).paginate(
         page, per_page=current_app.config["WORDS_PER_PAGE"], error_out=False)
     words = pagination.items
-    return render_template('english/words.html', words=words, pagination=pagination)
+    my_words = my_pagination.items
+    return render_template('english/words.html', words=words, pagination=pagination,
+                           my_words=my_words, my_pagination=my_pagination,
+                           book=book, lesson=lesson)
 
 
 @english.route('/exercise/new')
@@ -111,7 +128,7 @@ def do_exercise(id):
     if exercise and exercise.current != q:
         return redirect(url_for('english.do_exercise', id=exercise.id, q=exercise.current))
     if q >= exercise.total:
-        return redirect(url_for('english.evaluate', id=exercise.id))
+        return redirect(url_for('english.evaluate_exercise', id=exercise.id))
     myword = exercise.get_question_by_index(q)['word']
     #word_id = exercise.questions.split(',')[q]
     #myword = EnglishMyWord.query.filter(and_(EnglishMyWord.user_id==exercise.user_id, EnglishMyWord.word_id==word_id)).first_or_404()
@@ -130,7 +147,7 @@ def do_exercise(id):
         db.session.add(exercise)
         db.session.commit()
         if exercise.current == exercise.total:
-            return redirect(url_for('english.evaluate', id=exercise.id))
+            return redirect(url_for('english.evaluate_exercise', id=exercise.id))
         return redirect(url_for('english.do_exercise', id=exercise.id, q=exercise.current))
     form.word_mask.data = myword.mask(exercise.id * 100 + q, use_mask=exercise.use_mask)
     return render_template('english/do_exercise.html', form=form, exercise=exercise, myword=myword)
@@ -274,4 +291,3 @@ def view_book(id):
         book = mybook.book
         lessons = mybook.book.lessons
     return render_template("english/book.html", mybook=mybook, book=book, lessons=lessons)
-

@@ -5,7 +5,11 @@
         transform: translateX(0%);
     }
 }
-
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 85%;
+    }
+}
 nav .button-collapse {
     margin: 0;
 }
@@ -41,7 +45,7 @@ nav .button-collapse {
     padding: 0;
 }
 .card.grid-book .card-action a.btn {
-    padding 0 1rem;
+    margin: 0;
 }
 .card.grid-book .card-action a.v-line {
     width: 1px;
@@ -185,4 +189,9 @@ main {
 
 #exercise-button .btn-floating {
     margin-top: -28px;
+}
+
+.tabs .tab .material-icons {
+    height: 48px;
+    line-height: 48px;
 }

@@ -199,10 +199,11 @@ class EnglishMyWord(db.Model):
         json_myword = {
             'word_id': self.word_id,
             'user_id': self.user_id,
-            'book_id': self.word.book_id,
+            'book_id': self.word.lesson.book_id,
             'book_title': self.word.lesson.book.title,
             'lesson_id': self.word.lesson_id,
-            'lesson': self.word.lesson.lesson_title,
+            'lesson_number': self.word.lesson.number,
+            'lesson_title': self.word.lesson.title,
             'english': self.word.english,
             'chinese': self.word.chinese,
             'example': self.word.example,
@@ -309,7 +310,7 @@ class EnglishMyExercise(db.Model):
 
     def get_errors(self, level=0):
         errors = []
-        if not self.questions is None:
+        if self.total > 0 and self.current >= self.total and (not self.questions is None):
             for index, word_id in enumerate(self.questions.split(',')):
                 result = self.questions_result[index] if self.questions_result[index:] else ''
                 question_level = self.questions_level[index] if self.questions_level[index:] else ''

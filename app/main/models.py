@@ -47,6 +47,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(64), index=True)
+    email = db.Column(db.String(200), index=True, default="")
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     confirmed = db.Column(db.Boolean, default=True)
@@ -113,9 +114,12 @@ class User(UserMixin, db.Model):
             errors.extend(exercise.get_errors(level=level))
         errors_count = {e: errors.count(e) for e in set(errors)}
         errors_result = sorted(errors_count.items(), key=operator.itemgetter(0))[:number]
-        words = EnglishMyWord.query.filter_by(user_id = self.id)\
-            .filter(EnglishMyWord.word_id.in_([x[0] for x in errors_result])).order_by(EnglishMyWord.tested.desc()).all()
-        return words
+        if len([x[0] for x in errors_result if x[0] > 0]) > 0:
+            words = EnglishMyWord.query.filter_by(user_id = self.id)\
+                .filter(EnglishMyWord.word_id.in_([x[0] for x in errors_result if x[0] > 0])).order_by(EnglishMyWord.tested.desc()).all()
+            return words
+        else:
+            return []
 
     def has_unfinished_exercise(self):
         for exercise in self.english_exercises:
@@ -130,9 +134,6 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
-
-    def get_tab_token(self):
-        return None
 
 
 login_manager.anonymous_user = AnonymousUser

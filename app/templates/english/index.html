@@ -25,8 +25,9 @@
     <div class="card-action">
         <div class="valign-wrapper">
             {% if newword %}
-            <i class="material-icons">import_contacts</i><span id="book_title">{{ newword.word.lesson.book.title }}</span>&nbsp;<span
-                class="right-align grey-text" id="lesson"> {{ newword.word.lesson.lesson_title }}</span>
+            <i class="material-icons">import_contacts</i><span
+                id="book_title">{{ newword.word.lesson.book.title }}</span>&nbsp;<span
+                class="right-align grey-text" id="lesson"> {{ newword.word.lesson.title }}</span>
             {% else %}
             <a style="width:100%;" class="btn btn-flat waves-effect grey lighten-4"
                href="{{ url_for('english.books', _anchor='new_books') }}">Add New Book</a>
@@ -49,6 +50,13 @@
             <span class="right right-align">errors: {{ error_word.tested - error_word.passed }}</span></p></div>
     </li>
     {% endfor %}
+    {% else %}
+    <li>
+        <div class="collapsible-header row" style="line-height: 2rem;">
+            <span class="grey-text">You do not have any error words.<br/>
+            Go and take some <a href="{{ url_for('english.exercises') }}">exercises</a>.</span>
+        </div>
+    </li>
     {% endif %}
 </ul>
 
@@ -61,6 +69,10 @@
 
 {% block scripts %}
 {{ super() }}
+{% if current_app.config["JS_SERVE_LOCAL"] %}
+<script src="{{ url_for('static', filename='vendor/echarts/echarts.min.js') }}"></script>
+{% else %}
 <script src="//cdn.bootcss.com/echarts/3.3.2/echarts.min.js"></script>
+{% endif %}
 <script src="{{ url_for('static', filename='js/main.js')}}"></script>
 {% endblock %}

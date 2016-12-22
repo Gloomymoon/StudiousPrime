@@ -2,8 +2,8 @@
 
 {% block title %}My Book - {{ book.title }}{% endblock %}
 {% block navbar_title %}
-<a href="{{ url_for('english.books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My Books</a>
 {% if mybook %}
+<a href="{{ url_for('english.books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My Books</a>
 {% else %}
 <a href="{{ url_for('english.books', _anchor='new_books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My
     Books</a>
@@ -14,8 +14,10 @@
 <div class="section">
     <div class="row valign-wrapper">
         <div class="col s4">
+            {% if book.image %}
             <image src="{{ url_for('static', filename=book.image) }}"
                    class="responsive-img"></image>
+            {% endif %}
         </div>
         <div class="col s8">
             <h5>{{ book.title }}</h5>
@@ -54,7 +56,11 @@
                     {{ lesson.number }}. {{ lesson.title }}
                 </div>
                 <div class="col s4">
-                    <div class="chip"> {{ len(lesson.words) }} Words</div>
+                    {% if mybook %}
+                    <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='my_words') }}"><div class="chip"> {{ len(lesson.words) }} Words</div></a>
+                    {% else %}
+                    <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='words') }}"><div class="chip"> {{ len(lesson.words) }} Words</div></a>
+                    {% endif %}
                 </div>
                 <div class="col s4">
                     {% if mybook %}

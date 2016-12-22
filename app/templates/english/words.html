@@ -1,65 +1,128 @@
 {% extends "english/base.html" %}
 {% import "_macros.html" as macros %}
 
-{% block title %}english Words List{% endblock %}
+{% block title %}Words{% endblock %}
+{% block nav_class %}nav-extended{% endblock %}
+{% block navbar_title %}
+{% if book %}
+<a href="{{ url_for('english.view_book', id=book.id) }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>{{ book.title }}</a>
+{% else %}
 
+<a href="{{ url_for('english.words') }}" class="brand-logo">Words</a>
+{% endif %}
+{% endblock %}
+{% block navbar_tabs %}
+<ul class="tabs tabs-transparent">
+    <li class="tab"><a class="active" href="#words">All Words</a></li>
+    <li class="tab"><a href="#my_words">My Words</a></li>
+    <li class="tab"><a href="#new_word" class="valign-wrapper"><i class="material-icons">add</i></a></li>
+</ul>
+{% endblock %}
 {% block page_content %}
-    <h3>All Words
-        <span class="pull-right">
-        <a id="btnNew" href="{{ url_for('english.add_word') }}" class="btn btn-primary" role="button">
-            <span class="glyphicon glyphicon-plus"></span>
-            New Word
-        </a>
-        </span>
-    </h3>
-<div class="table-responsive panel panel-default">
-<table class="table table-hover">
-    <thead>
-        <tr class="">
-          <th>#</th>
-          <th>English</th>
-          <th>Chinese</th>
-          <th>Example</th>
-          <th>Create</th>
-          <th>Update</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if words %}
-        {% for word in words %}
-            <tr data-href="{{ url_for('.edit_word', id=word.id) }}">
+<div id="words" class="col s12">
+    <div class="section">
+        {% if book or lesson %}
+        <div class="row" style="margin-bottom:0;">
+            <div class="col s6">
+                {% if book %}<span>Book:</span><span class="red-text"> {{ book.title }}</span>{% endif %}
+            </div>
+            <div class="col s6">
+                {% if lesson %}<span>Lesson:</span><span class="red-text"> {{ lesson.title }}</span>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <table class="striped highlight">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Book</th>
+                <th>Lesson</th>
+                <th>English</th>
+                <th>Chinese</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if words %}
+            {% for word in words %}
+            <tr class="grey-text text-darken-2" data-href="{{ url_for('.edit_word', id=word.id) }}">
                 <td>{{ word.id }}</td>
+                <td>{{ word.lesson.book.title }}</td>
+                <td>{{ word.lesson.title }}</td>
                 <td>{{ word.english }}</td>
                 <td>{{ word.chinese }}</td>
-                <td>{{ word.example }}</td>
-                <td>{{ moment(word.create).fromNow() }}</td>
-                <td>{{ moment(word.update).fromNow() }}</td>
-                <!-- td><a href="{{ url_for('.edit_word', id=word.id) }}">
-                    <span class="glyphicon glyphicon-edit"></span>
-                    </a>
-                </td -->
             </tr>
-        {% endfor %}
-        {% endif %}
-    </tbody>
-</table>
-</div>
+            {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
 
-{% if words and pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.words') }}
+    {% if words and pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, '.words', book=book.id, lesson=lesson.number, fragment='#words') }}
+    </div>
+    {% endif %}
 </div>
-{% endif %}
+<div id="my_words" class="col s12">
+    <div class="section">
+        {% if book or lesson %}
+        <div class="row" style="margin-bottom:0;">
+            <div class="col s6">
+                {% if book %}<span>Book:</span><span class="red-text"> {{ book.title }}</span>{% endif %}
+            </div>
+            <div class="col s6">
+                {% if lesson %}<span>Lesson:</span><span class="red-text"> {{ lesson.title }}</span>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <table class="striped highlight">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Book</th>
+                <th>Lesson</th>
+                <th>English</th>
+                <th>Chinese</th>
+                <th>P/T</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if my_words %}
+            {% for my_word in my_words %}
+            <tr class="grey-text text-darken-2" data-href="{{ url_for('.edit_word', id=my_word.word_id) }}">
+                <td>{{ my_word.word_id }}</td>
+                <td>{{ my_word.word.lesson.book.title }}</td>
+                <td>{{ my_word.word.lesson.title }}</td>
+                <td>{{ my_word.word.english }}</td>
+                <td>{{ my_word.word.chinese }}</td>
+                <td>{{ my_word.passed }}/{{ my_word.tested }}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if my_words and my_pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, '.words', book=book.id, lesson=lesson.number, fragment='my_words') }}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script>
 $(document).ready(function() {
+/*
     $("tbody tr").click(function(){
         location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname + location.search);
     });
     $("#btnNew").attr("href", $("#btnNew").attr("href")+"?back=" + encodeURIComponent(location.pathname + location.search));
+*/
 });
+
+
 </script>
 {% endblock %}

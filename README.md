@@ -1,5 +1,15 @@
 # StudiousPrime
 
+### version 0.5.2
+updated 2016-12-18
+
+1 生产版本的CSS和JS切换为使用CDN的版本，减轻因heroku延迟造成页面加载过慢的问题
+
+2 增加注册页面
+
+3 增加单词查看页面
+
+
 ### version 0.5.1
 updated 2017-12-17
 

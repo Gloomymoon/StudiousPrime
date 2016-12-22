@@ -21,12 +21,13 @@ def get_exercise_summary():
                                'from english_myexercises '
                                'where user_id=' + str(current_user.id) + ' '
                                'and current >= total '
+                               'and total > 0 '
                                'group by date(create_dt) ')
     rows = []
     for r in result:
         rows.append({
-            'date': r['date'],
-            'accuracy': r['accuracy']
+            'date': r['date'].strftime("%Y-%m-%d"),
+            'accuracy': "%.2f" % r['accuracy']
         })
     return jsonify({
         'date': [r['date'] for r in rows],
