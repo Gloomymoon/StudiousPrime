@@ -223,7 +223,7 @@ def settings():
     form = LevelSettingForm()
     setting = EnglishSetting.query.filter_by(user_id=current_user.id).one_or_none()
     if not setting:
-        setting = EnglishSetting(user_id=current_user,
+        setting = EnglishSetting(user_id=current_user.id,
                                  total=current_app.config["WORDS_PER_EXERCISE"][0],
                                  level1=current_app.config["WORDS_PER_EXERCISE"][1],
                                  level2=current_app.config["WORDS_PER_EXERCISE"][2],
