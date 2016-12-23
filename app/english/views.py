@@ -231,7 +231,7 @@ def settings():
                                  level4=current_app.config["WORDS_PER_EXERCISE"][4],
                                  level5=current_app.config["WORDS_PER_EXERCISE"][5])
         db.session.add(setting)
-        db.commit()
+        db.session.commit()
     if form.validate_on_submit():
         setting.total = int(form.total.data)
         setting.level1 = int(form.level1.data)
