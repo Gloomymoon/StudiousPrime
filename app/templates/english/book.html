@@ -40,7 +40,7 @@
     </div>
     {% if not mybook %}
     <div class="row center">
-        <a class="waves-effect waves-light btn light-blue lighten-1 waves-input-wrapper"
+        <a class="waves-effect waves-light btn light-blue lighten-1"
            href="{{ url_for('english.add_book', id=book.id) }}">Add this book</a>
     </div>
     {% endif %}
@@ -61,7 +61,7 @@
                         {% else %}
                         <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='words') }}">
                             {% endif %}
-                            <div class="chip z-depth-1"> {{ len(lesson.words) }} Words</div>
+                            <div class="chip z-depth-1 waves-effect waves-light"> {{ len(lesson.words) }} Words</div>
                         </a>
                 </div>
                 <div class="col s4">

@@ -115,6 +115,11 @@
 {{ super() }}
 <script>
 $(document).ready(function() {
+    var anchor = $(location).attr('hash');
+    try {
+        $(anchor).show();
+    }
+    catch(err) {}
 /*
     $("tbody tr").click(function(){
         location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname + location.search);

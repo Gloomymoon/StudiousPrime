@@ -140,9 +140,17 @@
         </table>
     </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
+<script>
+$(document).ready(function(){
+    var anchor = $(location).attr('hash');
+    try {
+        $(anchor).show();
+    }
+    catch(err) {}
+});
+</script>
 {% endblock %}

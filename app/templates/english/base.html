@@ -20,15 +20,15 @@ English
 
 {% block sidenav_content %}
 {{ super() }}
-<li><a href="{{ url_for('english.index') }}"><i class="material-icons">dashboard</i> Dashboard</a></li>
-<li><a href="{{ url_for('english.exercises') }}"><i class="material-icons">explicit</i> Exercises</a></li>
-<li><a href="{{ url_for('english.achievements') }}"><i class="material-icons">local_play</i> Achievements</a></li>
-<li><a href="{{ url_for('english.books') }}"><i class="material-icons">import_contacts</i> Books</a></li>
+<li><a class="waves-effect" href="{{ url_for('english.index') }}"><i class="material-icons">dashboard</i> Dashboard</a></li>
+<li><a class="waves-effect" href="{{ url_for('english.exercises') }}"><i class="material-icons">explicit</i> Exercises</a></li>
+<li><a class="waves-effect" href="{{ url_for('english.achievements') }}"><i class="material-icons">local_play</i> Achievements</a></li>
+<li><a class="waves-effect" href="{{ url_for('english.books') }}"><i class="material-icons">import_contacts</i> Books</a></li>
 <li class="divider"></li>
-<li><a href="{{ url_for('english.settings') }}"><i class="material-icons">settings</i> Settings</a></li>
-<li><a href="#"><i class="material-icons">sms_faild</i> Feedback</a></li>
+<li><a class="waves-effect" href="{{ url_for('english.settings') }}"><i class="material-icons">settings</i> Settings</a></li>
+<li><a class="waves-effect" href="#"><i class="material-icons">sms_faild</i> Feedback</a></li>
 <li class="divider"></li>
-<li><a href="{{ url_for('english.help') }}"><i class="material-icons">help</i> Help</a></li>
+<li><a class="waves-effect" href="{{ url_for('english.help') }}"><i class="material-icons">help</i> Help</a></li>
 {% endblock %}
 
 {% block scripts %}
