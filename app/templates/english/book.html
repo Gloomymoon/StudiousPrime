@@ -57,16 +57,19 @@
                 </div>
                 <div class="col s4">
                     {% if mybook %}
-                    <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='my_words') }}"><div class="chip"> {{ len(lesson.words) }} Words</div></a>
-                    {% else %}
-                    <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='words') }}"><div class="chip"> {{ len(lesson.words) }} Words</div></a>
-                    {% endif %}
+                    <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='my_words') }}">
+                        {% else %}
+                        <a href="{{ url_for('english.words', book=lesson.book_id, lesson=lesson.number, _anchor='words') }}">
+                            {% endif %}
+                            <div class="chip z-depth-1"> {{ len(lesson.words) }} Words</div>
+                        </a>
                 </div>
                 <div class="col s4">
                     {% if mybook %}
                     <div class="switch">
                         <label>
-                            {% if mybook and mybook.lessons[lesson.number-1] and mybook.lessons[lesson.number-1] == '1' %}
+                            {% if mybook and mybook.lessons[lesson.number-1] and mybook.lessons[lesson.number-1] == '1'
+                            %}
                             <input id="lesson{{ lesson.id }}" type="checkbox" data-book="{{ book.id }}"
                                    data-lesson="{{ lesson.id }}" checked>
                             <span class="lever"></span>
@@ -110,6 +113,7 @@ $(document).ready(function() {
         }
     });
 });
+
 
 
 

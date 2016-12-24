@@ -201,6 +201,17 @@ main {
     line-height: 48px;
 }
 
+strong {
+    font-weight: 800;
+}
+
 form .input-field p.error-info {
     margin-top: -20px;
+}
+
+.row.compact {
+    margin-bottom: 5px;
+}
+.section.help .padding-left {
+    padding-left: 20px;
 }
