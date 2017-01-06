@@ -13,12 +13,19 @@
             <div class="input-field col s12">
                 {{ form.username(class="validate") }}
                 {{ form.username.label() }}
+                {% if form.errors and form.errors['username'] %}
+                <p class="red-text error-info">{{ form.errors['username'][0] }}</p>
+                {% endif %}
             </div>
 
             <div class="input-field col s12">
                 {{ form.password(class="validate") }}
                 {{ form.password.label() }}
+                {% if form.errors and form.errors['password'] %}
+                <p class="red-text error-info">{{ form.errors['password'][0] }}</p>
+                {% endif %}
             </div>
+
             <div class="input-field col s12">
                 {{ form.remember_me() }}
                 {{ form.remember_me.label() }}
@@ -29,9 +36,12 @@
                 {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
             </div>
         </div>
+        <div class="row">
+            <p class="center-align">Or <u><a href=" {{ url_for('main.register') }}" class="">register</a></u> for free
+            </p>
+        </div>
     </form>
 
-    <p class="center-align">Or <u><a href=" {{ url_for('main.register') }}" class="">register</a></u> for free</p>
 </div>
 {% endblock %}
 

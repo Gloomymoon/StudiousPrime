@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Site Management{% endblock %}
+
+{% block navbar_title %}
+Site Management
+{% endblock %}
+
+{% block navbar_content %}
+{{ super() }}
+<li><a href="{{ url_for('english.index') }}">English</a></li>
+
+{% endblock %}
+
+
+{% block sidenav_content %}
+{{ super() }}
+<li><a href="{{ url_for('english.index') }}"><i class="material-icons">dashboard</i> English</a></li>
+<li class="divider"></li>
+<li class="divider"></li>
+<li><a href="{{ url_for('english.help') }}"><i class="material-icons">help</i> Help</a></li>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

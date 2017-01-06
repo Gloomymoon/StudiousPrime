@@ -18,6 +18,7 @@ class Config:
     WORDS_PER_EXERCISE = [25, 15, 5, 3, 2, 0]   # word numbers by every level from 0 to 5, [0] means total
     WORDS_PER_PAGE = 10
     EXERCISES_PER_PAGE = 10
+    USERS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):

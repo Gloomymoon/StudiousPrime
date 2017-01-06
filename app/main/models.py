@@ -79,15 +79,18 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        if not password:
+        if not self.password_hash:
             return True
+        if not password:
+            return False
         return check_password_hash(self.password_hash, password)
 
     def verify_user(self):
         return self.confirmed
 
     def can(self, permissions):
-        return None
+        return self.role is not None and \
+            (self.role.permissions & permissions) == permissions
 
     def is_administrator(self, project='admin'):
         return self.can(Permission.ADMINISTER)
