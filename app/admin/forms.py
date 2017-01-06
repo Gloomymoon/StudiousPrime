@@ -7,7 +7,7 @@ from app.main.models import User, Role
 
 class EditUserAdminForm(FlaskForm):
     username = StringField('Name')
-    email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
+    email = StringField('Email')
     password = StringField('Password (leave blank if no change made)')
     confirmed = BooleanField('Confirmed')
     role = SelectField('Role', coerce=int)
