@@ -17,6 +17,7 @@ Site Management
 {{ super() }}
 <li><a href="{{ url_for('english.index') }}"><i class="material-icons">dashboard</i> English</a></li>
 <li class="divider"></li>
+<li><a class="waves-effect" href="{{ url_for('admin.users') }}"><i class="material-icons">assignment_ind</i> User Managemen</a> </li>
 <li class="divider"></li>
 <li><a href="{{ url_for('english.help') }}"><i class="material-icons">help</i> Help</a></li>
 {% endblock %}
