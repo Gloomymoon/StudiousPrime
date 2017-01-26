@@ -59,6 +59,7 @@ class User(UserMixin, db.Model):
     english_words = db.relationship('EnglishMyWord', back_populates='user', cascade="all, delete, delete-orphan", lazy="dynamic")
     english_exercises = db.relationship('EnglishMyExercise', back_populates='user', cascade="all, delete, delete-orphan", lazy="dynamic")
     english_setting = db.relationship('EnglishSetting', back_populates='user', cascade="all, delete, delete-orphan", uselist=False)
+    english_recognition = db.relationship('EnglishRecognition', back_populates='user', cascade="all, delete, delete-orphan", uselist=False)
 
     '''
     def __init__(self, **kwargs):
@@ -79,15 +80,18 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        if not password:
+        if not self.password_hash:
             return True
+        if not password:
+            return False
         return check_password_hash(self.password_hash, password)
 
     def verify_user(self):
         return self.confirmed
 
     def can(self, permissions):
-        return None
+        return self.role is not None and \
+            (self.role.permissions & permissions) == permissions
 
     def is_administrator(self, project='admin'):
         return self.can(Permission.ADMINISTER)
@@ -98,11 +102,11 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r %r>' % (self.id, self.name)
 
-    def random_words(self, level=0, number=1):
+    def random_words(self, level=0, number=1, selected=True):
         if 1 <= level <= 5:
-            words = [word for word in self.english_words if word.level == level and word.selected is True]
+            words = [word for word in self.english_words if word.level == level and (selected is not True or word.selected is True)]
         else:
-            words = [word for word in self.english_words if word.selected is True]
+            words = [word for word in self.english_words if selected is not True or word.selected is True]
         if words and number < len(words):
             return random.sample(words, number)
         else:
@@ -120,6 +124,22 @@ class User(UserMixin, db.Model):
             return words
         else:
             return []
+
+    def random_recognition_words(self, seed=0, number=4, selected=True):
+        random.seed(seed)
+        result_words = self.random_words(1, selected)
+        if len(result_words) and result_words[0]:
+
+            other_words = [word for word in self.english_words if word.word_id != result_words[0].word_id and word.word.lesson_id == result_words[0].word.lesson_id]
+            if len(other_words) < number - 1:
+                other_words = [word for word in self.english_words if word.word_id != result_words[0].word_id and word.word.lesson.book_id == result_words[0].word.lesson.book_id]
+            if len(other_words) < number - 1:
+                other_words = [word for word in self.english_words if
+                       word.word_id != result_words[0].word_id]
+            if len(other_words) > number - 1:
+                other_words = random.sample(other_words, number - 1)
+        result_words.extend(other_words)
+        return result_words
 
     def has_unfinished_exercise(self):
         for exercise in self.english_exercises:

@@ -27,5 +27,10 @@ def inject_len():
 
 
 @main.app_context_processor
-def inject_len():
+def inject_current_app():
     return dict(current_app=current_app)
+
+
+@main.app_context_processor
+def inject_chr():
+    return dict(chr=chr)

@@ -1,12 +1,13 @@
 from datetime import datetime
+import random
 from flask import render_template, flash, request, current_app, redirect, url_for, abort
 from flask_login import login_required, current_user
 from sqlalchemy import and_, not_
 from . import english
 from app import db
-from .forms import NewWordForm, EditWordForm, QuestionForm, LevelSettingForm
+from .forms import NewWordForm, EditWordForm, QuestionForm, LevelSettingForm, RecognitionForm
 from .models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, \
-    EnglishSetting, EnglishMyBook, EnglishLesson
+    EnglishSetting, EnglishMyBook, EnglishLesson, EnglishRecognition
 
 
 @english.route('/')
@@ -297,3 +298,51 @@ def view_book(id):
 @login_required
 def help():
     return render_template("english/help.html")
+
+
+@english.route("/recognition", methods=['GET', 'POST'])
+@login_required
+def recognition():
+    recognition = current_user.english_recognition
+    if not recognition:
+        recognition = EnglishRecognition(user_id=current_user.id, total=30)
+        db.session.add(recognition)
+        db.session.commit()
+    form = RecognitionForm()
+    if form.validate_on_submit():
+        recognition.total = form.total.data
+        recognition.current = 0
+        recognition.passed = 0
+        recognition.create_dt = datetime.utcnow()
+        recognition.finish_dt = None
+        recognition.english_question = form.english_question.data
+        recognition.use_image = form.use_image.data
+        recognition.timeout = form.timeout.data
+        db.session.add(recognition)
+        db.session.commit()
+        return redirect(url_for('english.do_recognition'))
+    form.total.data = recognition.total
+    form.english_question.data = recognition.english_question
+    form.use_image.data = recognition.use_image
+    form.timeout.data = recognition.timeout
+    return render_template("english/recognition.html", recognition=recognition, form=form)
+
+
+@english.route("/recognition/do")
+@login_required
+def do_recognition():
+    recognition = current_user.english_recognition
+    if not recognition:
+        return redirect(url_for('english.recognition'))
+    if recognition.current >= recognition.total:
+        recognition.finish_dt = datetime.utcnow()
+        db.session.add(recognition)
+        db.session.commit()
+        return redirect(url_for('english.recognition'))
+    seed = recognition.create_dt.year * 1000000 + recognition.create_dt.month * 10000 + recognition.create_dt.day * 100 \
+           + recognition.create_dt.hour + recognition.create_dt.minute + recognition.create_dt.second + recognition.current
+    words = current_user.random_recognition_words(seed)
+    if words and words[0]:
+        question_id = words[0].word.id
+    random.shuffle(words)
+    return render_template("english/do_recognition.html", words=words, recognition=recognition, question_id=question_id)

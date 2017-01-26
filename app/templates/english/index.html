@@ -15,7 +15,7 @@
         <h4 id="chinese">{{ newword.word.chinese }}</h4>
         <p id="example" class="grey-text">{{ newword.word.example }}</p>
         <a id="next" class="right btn-floating btn-large waves-effect waves-light red lighten-1" href="#">
-            <i class="material-icons">refresh</i>
+            <i class="material-icons md-36">refresh</i>
             Next</a>
         {% else %}
         <p>You have no new word yet.<br/>
@@ -35,6 +35,12 @@
         </div>
     </div>
 
+</div>
+<div class="row valign-wrapper">
+    <span class="col s2 center-align">Take</span>
+    <a class="col s4 btn waves-effect waves-light light-blue lighten-3" href="{{ url_for('english.recognition') }}">Recognition</a>
+    <span class="col s2 center-align">or</span>
+    <a class="col s4 btn waves-effect waves-light light-blue" href="{{ url_for('english.exercises') }}">Exercises</a>
 </div>
 <ul id="error_words" class="card collapsible" data-collapsible="expandable">
     <li>

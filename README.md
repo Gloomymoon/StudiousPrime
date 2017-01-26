@@ -1,4 +1,10 @@
 # StudiousPrime
+### version 0.5.3
+updated 2017-01-26
+1 增加用户管理模块，可以查看用户信息
+
+2 增加单词辨识功能
+
 
 ### version 0.5.2
 updated 2016-12-18

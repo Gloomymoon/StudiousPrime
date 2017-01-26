@@ -1,0 +1,51 @@
+{% extends "english/base.html" %}
+
+{% block title %}Help{% endblock %}
+{% block navbar_title %}
+<a href="#" class="brand-logo">Help</a>
+{% endblock %}
+
+{% block page_content %}
+<div class="section help">
+    <div class="row compact">
+        <div class="col s1"><i class="material-icons">menu</i></div>
+        <div class="col s11 padding-left"><strong> Main Menu</strong>: show main menu</div>
+    </div>
+    <div class="row compact">
+        <div class="col s1"><i class="material-icons">dashboard</i></div>
+        <div class="col s11 padding-left"><strong> Dashboard</strong>: home page, display random new word, error words
+            and score history.
+        </div>
+    </div>
+    <div class="row compact">
+        <div class="col s1"><i class="material-icons">explicit</i></div>
+        <div class="col s11 padding-left"><strong> Exercises</strong>: view exercises result, take new exercise.
+        </div>
+    </div>
+    <div class="row compact">
+        <div class="col s1"><i class="material-icons">local_play</i></div>
+        <div class="col s11 padding-left"><strong> Achievements</strong>: view achievements and distribution of word levels.
+        </div>
+    </div>
+    <div class="row compact">
+        <div class="col s1"><i class="material-icons">import_contacts</i></div>
+        <div class="col s11 padding-left"><strong> Books</strong>: view books and add new books. <strong class="red-text"> New users should add a book and
+            select lessons first.</strong>
+        </div>
+    </div>
+    <div class="row compact">
+        <div class="col s1"><i class="material-icons">settings</i></div>
+        <div class="col s11 padding-left"><strong> Settings</strong>: change exercise settings.
+        </div>
+        <div class="col s11 offset-s1 padding-left"><strong> Level1~5</strong>: the number of word per level in new exercise.
+        </div>
+        <div class="col s11 offset-s1 padding-left"><strong> Fill Down</strong>: when enabled, lower level words will be selected if higher level words was not enough.
+        </div>
+        <div class="col s11 offset-s1 padding-left"><strong> Fill level 5</strong>: when enabled, level 5 words will be selected if lower level words was not enough.
+        </div>
+        <div class="col s11 offset-s1 padding-left"><strong> Use Mask</strong>: when enabled, several random letters of every questioned word will be shown.
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,9 +1,10 @@
 from random import sample
-from flask import jsonify, current_app
+from flask import jsonify, current_app, request
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from app import db
-from app.english.models import EnglishMyExercise, EnglishMyWord, EnglishSummary, EnglishMyBook, EnglishLesson
+from app.english.models import EnglishMyExercise, EnglishMyWord, EnglishSummary, EnglishMyBook, EnglishLesson,\
+    EnglishWord
 from . import api
 
 
@@ -87,3 +88,26 @@ def disable_lesson(lesson_id):
             if mybook.disable_lesson(lesson_id):
                 return jsonify({"lesson": lesson_id, "result": 'true'})
     return jsonify({"lesson": lesson_id, "result": 'false'})
+
+
+@api.route('/e/recognition/check/', methods=['POST'])
+@login_required
+def recognition_checks():
+    word_id = request.values.get('word_id', 0)
+    answer = request.values.get('answer', '')
+    type = request.values.get('english_question', 0)
+    recognition = current_user.english_recognition
+    word = EnglishWord.query.filter_by(id=word_id).first()
+    if type:
+        correct_answer = word.chinese
+    else:
+        correct_answer = word.english
+    if word and answer == correct_answer:
+        result = "true"
+        recognition.passed += 1
+    else:
+        result = "false"
+    recognition.current += 1
+    db.session.add(recognition)
+    db.session.commit()
+    return jsonify({"answer": correct_answer, "result": result, "raw_answer": answer})

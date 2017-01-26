@@ -1,0 +1,61 @@
+{% extends "admin/base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Users{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('admin.users') }}" class="brand-logo">Users</a>
+{% endblock %}
+
+{% block page_content %}
+<div class="section">
+    <table class="bordered highlight">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Cfm.</th>
+            <th>Create DT</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if users %}
+        {% for user in users %}
+        <tr data-href="{{ url_for('.edit_user', id=user.id) }}">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.role.name }}</td>
+            <td>{{ user.confirmed }}</td>
+            <td>{{ moment(user.since).fromNow() }}</td>
+            <td><i class="material-icons">more_horiz</i>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% if exercises and pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.users') }}
+</div>
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+    $("tbody tr").click(function(){
+        location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname);
+    });
+});
+
+
+
+</script>
+{% endblock %}

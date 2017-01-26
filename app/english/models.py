@@ -120,6 +120,7 @@ class EnglishMyBook(db.Model):
             return True
         return False
 
+
 class EnglishLesson(db.Model):
     __tablename__ = 'english_lessons'
     id = db.Column(db.Integer, primary_key=True)
@@ -318,66 +319,6 @@ class EnglishMyExercise(db.Model):
                     errors.append(word_id)
         return errors
 
-'''
-class Statistic():
-    @staticmethod
-    def wrong_words(user_id, number):
-        wq = db.session.query(EnglishQuestion.word_id.label('word_id'), func.count(EnglishQuestion.index).label('count'))\
-            .join(EnglishQuestion.exercise)\
-            .filter(EnglishExercise.user_id==user_id)\
-            .filter(EnglishQuestion.result < 1).group_by(EnglishQuestion.word_id)\
-            .filter(EnglishExercise.finish > '1800-01-01')\
-            .order_by(func.count(EnglishQuestion.index).desc()).limit(number).all()
-        w = Word.query.filter(Word.id.in_((x.word_id for x in wq))).all()
-        return w
-
-    @staticmethod
-    def achievements(user_id):
-        val1 = sql.expression.literal_column("1.0")
-        ae = db.session.query(func.count(EnglishExercise.id).label('TotalExercises'),
-                              func.sum(EnglishExercise.total).label('TotalQuestions'),
-                              func.sum(EnglishExercise.correct).label('TotalCorrects'),
-                              func.sum(case([(EnglishExercise.correct == EnglishExercise.total, 1)], else_=0)).label(
-                                  'TotalFullScore'),
-                              func.max(EnglishExercise.finish).label('LastFinish'),
-                              func.max((EnglishExercise.correct * val1 / EnglishExercise.total)).label('HighestCorrect'),
-                              ) \
-            .filter(EnglishExercise.user_id == user_id) \
-            .filter(EnglishExercise.finish > '1800-01-01').first()
-        aq = db.session.query(func.count(distinct(EnglishQuestion.word_id)).label('TotalTestWords'),
-                              ).join(EnglishQuestion.exercise).filter(EnglishExercise.user_id == user_id) \
-            .filter(EnglishExercise.finish > '1800-01-01').first()
-        aq2 = db.session.query(func.count(distinct(EnglishQuestion.word_id)).label('TotalCorrectWords')
-                               ).join(EnglishQuestion.exercise) \
-            .filter(EnglishExercise.user_id == user_id) \
-            .filter(EnglishExercise.finish > '1800-01-01') \
-            .filter(EnglishQuestion.result > 0).first()
-        aq3 = db.session.query(EnglishQuestion.english, func.count(EnglishQuestion.index).label('count')) \
-            .join(EnglishQuestion.exercise) \
-            .filter(EnglishExercise.user_id == user_id) \
-            .filter(EnglishQuestion.result < 1).group_by(EnglishQuestion.english) \
-            .filter(EnglishExercise.finish > '1800-01-01') \
-            .order_by(func.count(EnglishQuestion.index).desc()).limit(5).all()
-        aws = db.session.query(MyWord.level.label("level"), func.count(MyWord.word_id).label('count')) \
-            .filter(MyWord.user_id == user_id) \
-            .group_by(MyWord.level).order_by(MyWord.level.asc()).all()
-        aws2 = db.session.query(func.count(MyWord.word_id).label('TotalWords')).filter(
-            MyWord.user_id == user_id).first()
-        achievements = {'TotalExercises': ae.TotalExercises,
-                        'TotalQuestions': ae.TotalQuestions,
-                        'TotalCorrects': ae.TotalCorrects,
-                        'TotalFullScore': ae.TotalFullScore,
-                        'LastFinish': ae.LastFinish,
-                        'HighestCorrect': ae.HighestCorrect,
-                        'TotalTestWords': aq.TotalTestWords,
-                        'TotalCorrectWords': aq2.TotalCorrectWords,
-                        'WrongWords': aq3,
-                        'WordScores': aws,
-                        'TotalWords': aws2.TotalWords
-                        }
-        return achievements
-'''
-
 
 class EnglishSummary(db.Model):
     __tablename__ = 'english_summary'
@@ -399,3 +340,17 @@ class EnglishSummary(db.Model):
             'accuracy': "%2.1f" % (self.correct / self.total * 100),
         }
         return json_summary
+
+
+class EnglishRecognition(db.Model):
+    __tablename__ = 'english_recognition'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    english_question = db.Column(db.Boolean, default=False)
+    total = db.Column(db.Integer, default=0)
+    current = db.Column(db.Integer, default=0)
+    passed = db.Column(db.Integer, default=0)
+    create_dt = db.Column(db.DateTime(), default=datetime.utcnow)
+    finish_dt = db.Column(db.DateTime())
+    timeout = db.Column(db.Integer, default=0)
+    use_image = db.Column(db.Integer, default=False)
+    user = db.relationship("User", back_populates="english_recognition")

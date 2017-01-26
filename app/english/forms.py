@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField, HiddenField, BooleanField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField, HiddenField, BooleanField, RadioField
 from wtforms.validators import Required
 from wtforms import ValidationError
 from wtforms_components import read_only
@@ -67,3 +67,14 @@ class LevelSettingForm(FlaskForm):
         read_only(self.level3)
         read_only(self.level4)
         read_only(self.level5)
+
+
+class RecognitionForm(FlaskForm):
+    total = IntegerField('Total Questions', render_kw={"data-min": "1", "data-max": "100"})
+    timeout = IntegerField('Timeout', render_kw={"data-min": "0", "data-max": "60"})
+    english_question = RadioField('Question is', choices=[(0, 'Chinese'), (1, 'English')], coerce=int)
+    use_image = RadioField('Chinese as', choices=[(0, 'Text   '), (1, 'Image')], coerce=int)
+
+    submit = SubmitField('Start New')
+
+

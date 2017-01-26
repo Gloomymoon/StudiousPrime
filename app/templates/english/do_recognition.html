@@ -1,0 +1,99 @@
+{% extends "english/base.html" %}
+
+{% block title %}English Recognition{% endblock %}
+{% block navbar_title %}
+<a href="#" class="brand-logo">Recognition</a>
+{% endblock %}
+
+{% block flash_content %}
+<div class="progress exercise light-blue lighten-4 z-depth-1">
+    {% if recognition.current >= 0 %}
+    <div class="determinate right-align white-text light-blue lighten-1"
+         style="width: {{ (recognition.current + 1) / recognition.total * 100}}%;">{{ recognition.current + 1 }}
+    </div>
+    {% endif %}
+    <div style="margin-left:{{ (recognition.current + 1) / recognition.total * 100}}%;">{{ recognition.total -
+        recognition.current - 1 }}
+    </div>
+</div>
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<div class="section" id="recognition">
+    <div class="row">
+        {% for word in words %}
+        {% if word.word.id == question_id %}
+        <h4 class="center-align" id="question" data-word-id="{{ word.word.id }}">
+            {% if recognition.english_quest %}{{ word.word.english }}{% else %}{{ word.word.chinese }}{% endif %}
+        </h4>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% for i, word in enumerate(words) %}
+    <div class="answer">
+        <div class="card horizontal row">
+            <div class="col s2"><h5 class="answer-option">{{ chr(65 + i) }}.</h5></div>
+            <div class="col s8">
+                <h5 class="answer-text">
+                    {% if recognition.english_quest %}{{ word.word.chinese }}{% else %}{{ word.word.english }}{% endif
+                    %}
+                </h5></div>
+            <div class="col s2">
+                <i class="material-icons md-36 correct" style="display:none;">check</i>
+                <i class="material-icons md-36 wrong" style="display:none;">clear</i>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row center-align" style="display:none" id="recognition_next">
+        <a href="{{ url_for('english.do_recognition') }}" class="btn btn-large waves-effect waves-light light-blue lighten-1">Next<i class="material-icons right">send</i></a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+    $(".answer").click(function(){
+        $.ajax({
+          type: "POST",
+          url: "/api/e/recognition/check/",
+          data: {word_id: $("#question").data("word-id"), answer: $(this).find(".answer-text")[0].innerText},
+          success: function(data){
+            if(data && data['result']){
+                correct_answer = data['answer'];
+                raw_answer = data['raw_answer'];
+                if(data['result']=='true'){
+                    $(".answer").each(function(i, dom){
+                        if($(dom).find(".answer-text")[0].innerText == raw_answer){
+                            $(dom).addClass("correct").find("i.correct").show();
+                        }
+                    });
+                }
+                else{
+                    $(".answer").each(function(i, dom){
+                        if($(dom).find(".answer-text")[0].innerText == raw_answer){
+                            $(dom).addClass("wrong").find("i.wrong").show();
+                        }
+                        if($(dom).find(".answer-text")[0].innerText == correct_answer){
+                            $(dom).addClass("select").find("i.correct").show();
+                        }
+                    });
+                }
+                $(".answer").unbind();
+                $("#recognition_next").show();
+            }
+          },
+          dataType: "json"
+        });
+    });
+});
+
+
+
+
+
+</script>
+{% endblock %}

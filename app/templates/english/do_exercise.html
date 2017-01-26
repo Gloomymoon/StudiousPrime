@@ -7,12 +7,12 @@
 
 {% block flash_content %}
 <div class="progress exercise light-blue lighten-4 z-depth-1">
-    {% if exercise.current > 0 %}
+    {% if exercise.current >= 0 %}
     <div class="determinate right-align white-text light-blue lighten-1"
-         style="width: {{ exercise.current / exercise.total * 100}}%;">{{ exercise.current }}
+         style="width: {{ (exercise.current + 1) / exercise.total * 100}}%;">{{ exercise.current + 1 }}
     </div>
     {% endif %}
-    <div style="margin-left:{{ exercise.current / exercise.total * 100}}%;">{{ exercise.total - exercise.current }}
+    <div class="grey-text" style="margin-left:{{ (exercise.current + 1) / exercise.total * 100}}%;">{{ exercise.total - exercise.current - 1}}
     </div>
 </div>
 {{ super() }}
@@ -36,7 +36,7 @@
                 {% endif %}
             </div>
         </div>
-        <h4><i class="light-blue-text text-lighten-1 material-icons prefix">g_translate</i> {{ myword.word.chinese }}
+        <h4><!-- i class="light-blue-text text-lighten-1 material-icons prefix">g_translate</i --> {{ myword.word.chinese }}
         </h4>
         <div class="row">
             <div class="col s12">

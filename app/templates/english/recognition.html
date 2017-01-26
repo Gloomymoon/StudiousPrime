@@ -1,0 +1,138 @@
+{% extends "english/base.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-spinner.css') }}">
+{% endblock %}
+
+{% block title %}English Recognition{% endblock %}
+{% block navbar_title %}
+<a href="#" class="brand-logo">Recognition</a>
+{% endblock %}
+{% block page_content %}
+<div class="section">
+    <div>{% if recognition %}
+        <span>{% if recognition.english_question %}English{% else %}Chinese{% endif %} Question</span>
+        <span class="right">{{ moment(recognition.finish_dt).fromNow() }}</span>
+        {% endif %}
+    </div>
+    {% if recognition.current >= recognition.total %}
+    <h2 class="center-align score">{{ recognition.passed }} / {{ recognition.total}}</h2>
+    <p class="center-align grey-text">duration: {{ (str(recognition.finish_dt - recognition.create_dt).split('.')[0])
+        }}</p>
+    {% else %}
+    <h2 class="center-align score">{{ recognition.current + 1}}</h2>
+    <p class="center-align grey-text">total {{ recognition.total}}</p>
+    <div class="center-align">
+        <a href="{{ url_for('english.do_recognition') }}"
+           class="btn btn-large waves-effect waves-light light-blue lighten-1">Continue</a>
+    </div>
+    {% endif %}
+</div>
+        <div class="divider"></div>
+
+<div class="section">
+    <form class="center-align" method="post" id="settings">
+        {{ form.hidden_tag() }}
+        <div class="row valign-wrapper total-group">
+            <div class="col s4 right-align">{{ form.total.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.total(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row valign-wrapper spin-group">
+            <div class="col s4 right-align">{{ form.timeout.label() }}</div>
+            <div class="col s8">
+                <div class="input-field inline">
+                    <div class="spinner row" data-trigger="spinner" id="spinner">
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-down" data-spin="down"><i
+                                    class="material-icons">remove</i></a>
+                        </div>
+                        {{ form.timeout(class="form-control center-align col s4") }}
+                        <div class="input-group-addon col s4">
+                            <a href="javascript:;" class="spin-up" data-spin="up"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 right-align">{{ form.english_question.label() }}</div>
+            <div class="col s8 left-align radio">
+                {% for subfield in form.english_question %}
+                <div class="col s6">
+                    {{ subfield }}
+                    {{ subfield.label }}
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 right-align">{{ form.use_image.label() }}</div>
+            <div class="col s8 left-align radio">
+                {% for subfield in form.use_image %}
+                <div class="col s6">
+                    {{ subfield }}
+                    {{ subfield.label }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                {{ form.submit(class="waves-effect waves-light btn btn-large light-blue lighten-1") }}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.spinner.min.js')}}"></script>
+<script>
+$(document).ready(function() {
+    $('.spinner').spinner();
+
+    $('.spin-group .spinner .spin-down').click(function(){
+        if (parseInt($(this).parent().next('input').val()) > 0){
+        }
+    });
+    $('.spin-group .spinner .spin-up').click(function(){
+        if (parseInt($('#total').val()) < 100){
+        }
+        else {
+            $(this).parent().prev('input').val(parseInt($(this).parent().prev('input').val()) - 1);
+        }
+    });
+    $('.spinner').spinner();
+});
+
+
+
+
+
+
+
+
+
+
+
+</script>
+{% endblock %}
