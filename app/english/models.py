@@ -352,5 +352,5 @@ class EnglishRecognition(db.Model):
     create_dt = db.Column(db.DateTime(), default=datetime.utcnow)
     finish_dt = db.Column(db.DateTime())
     timeout = db.Column(db.Integer, default=0)
-    use_image = db.Column(db.Integer, default=False)
+    use_image = db.Column(db.Boolean, default=False)
     user = db.relationship("User", back_populates="english_recognition")
