@@ -213,6 +213,10 @@ main {
     line-height: 48px;
 }
 
+strong {
+    font-weight: 800;
+}
+
 form .input-field p.error-info {
     margin-top: -20px;
 }
