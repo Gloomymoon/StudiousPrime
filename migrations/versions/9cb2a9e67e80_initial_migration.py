@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('create_dt', sa.DateTime(), nullable=True),
     sa.Column('finish_dt', sa.DateTime(), nullable=True),
     sa.Column('timeout', sa.Integer(), nullable=True),
-    sa.Column('use_image', sa.Integer(), nullable=True),
+    sa.Column('use_image', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('user_id')
     )
