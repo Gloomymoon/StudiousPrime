@@ -128,8 +128,8 @@ class User(UserMixin, db.Model):
     def random_recognition_words(self, seed=0, number=4, selected=True):
         random.seed(seed)
         result_words = self.random_words(1, selected)
+        other_words = []
         if len(result_words) and result_words[0]:
-
             other_words = [word for word in self.english_words if word.word_id != result_words[0].word_id and word.word.lesson_id == result_words[0].word.lesson_id]
             if len(other_words) < number - 1:
                 other_words = [word for word in self.english_words if word.word_id != result_words[0].word_id and word.word.lesson.book_id == result_words[0].word.lesson.book_id]
