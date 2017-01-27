@@ -96,8 +96,11 @@ def recognition_checks():
     word_id = request.values.get('word_id', 0)
     answer = request.values.get('answer', '')
     type = request.values.get('english_question', 0)
+    current = request.values.get('current', '-1')
     recognition = current_user.english_recognition
     word = EnglishWord.query.filter_by(id=word_id).first()
+    if current and int(current) != recognition.current:
+        return jsonify({}), 500
     if type:
         correct_answer = word.chinese
     else:

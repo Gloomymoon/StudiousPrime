@@ -24,7 +24,7 @@
     <div class="row">
         {% for word in words %}
         {% if word.word.id == question_id %}
-        <h4 class="center-align" id="question" data-word-id="{{ word.word.id }}">
+        <h4 class="center-align" id="question" data-word-id="{{ word.word.id }}" data-current="{{ recognition.current }}">
             {% if recognition.english_quest %}{{ word.word.english }}{% else %}{{ word.word.chinese }}{% endif %}
         </h4>
         {% endif %}
@@ -60,7 +60,7 @@ $(document).ready(function() {
         $.ajax({
           type: "POST",
           url: "/api/e/recognition/check/",
-          data: {word_id: $("#question").data("word-id"), answer: $(this).find(".answer-text")[0].innerText},
+          data: {word_id: $("#question").data("word-id"), answer: $(this).find(".answer-text")[0].innerText, current: $("#question").data("current")},
           success: function(data){
             if(data && data['result']){
                 correct_answer = data['answer'];
