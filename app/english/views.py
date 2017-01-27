@@ -342,6 +342,7 @@ def do_recognition():
     seed = recognition.create_dt.year * 1000000 + recognition.create_dt.month * 10000 + recognition.create_dt.day * 100 \
            + recognition.create_dt.hour + recognition.create_dt.minute + recognition.create_dt.second + recognition.current
     words = current_user.random_recognition_words(seed)
+    question_id = 0
     if words and words[0]:
         question_id = words[0].word.id
     random.shuffle(words)
