@@ -25,7 +25,7 @@
         {% for word in words %}
         {% if word.word.id == question_id %}
         <h4 class="center-align" id="question" data-word-id="{{ word.word.id }}" data-current="{{ recognition.current }}">
-            {% if recognition.english_quest %}{{ word.word.english }}{% else %}{{ word.word.chinese }}{% endif %}
+            {% if recognition.english_question %}{{ word.word.english }}{% else %}{{ word.word.chinese }}{% endif %}
         </h4>
         {% endif %}
         {% endfor %}
@@ -36,7 +36,7 @@
             <div class="col s2"><h5 class="answer-option">{{ chr(65 + i) }}.</h5></div>
             <div class="col s8">
                 <h5 class="answer-text">
-                    {% if recognition.english_quest %}{{ word.word.chinese }}{% else %}{{ word.word.english }}{% endif
+                    {% if recognition.english_question %}{{ word.word.chinese }}{% else %}{{ word.word.english }}{% endif
                     %}
                 </h5></div>
             <div class="col s2">
