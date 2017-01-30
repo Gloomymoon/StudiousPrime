@@ -156,3 +156,8 @@ def init_app_data():
         db.session.add(w)
         db.session.commit()
     '''
+
+
+def add_new_book():
+    add_book("3E", u"3E口语二级")
+    import_words("3E.csv")
