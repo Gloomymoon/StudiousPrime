@@ -27,9 +27,13 @@
         <a href="{{ url_for('english.do_recognition') }}"
            class="btn btn-large waves-effect waves-light light-blue lighten-1">Continue</a>
     </div>
+    {% if len(current_user.english_words.all()) < recognition.total %}
+    <p class="center-align grey-text">You do NOT have enough words to practise.<br/>
+    <u><a href="{{ url_for('english.books') }}">Add a new book</a></u></p>
+    {% endif %}
     {% endif %}
 </div>
-        <div class="divider"></div>
+<div class="divider"></div>
 
 <div class="section">
     <form class="center-align" method="post" id="settings">
@@ -123,6 +127,7 @@ $(document).ready(function() {
     });
     $('.spinner').spinner();
 });
+
 
 
 

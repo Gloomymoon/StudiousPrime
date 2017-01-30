@@ -1,10 +1,15 @@
 {% extends "material/base.html" %}
 
-{% block title %}Studious Prime{% endblock %}
-
 {% block head %}
+<title>{% block title %}Studious Prime{% endblock title %}</title>
+
+{%- block metas %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{%- endblock metas %}
+
+{%- block styles %}
+
 {% if current_app.config["CSS_SERVE_LOCAL"] %}
-{{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons.css') }}">
 {% else %}
@@ -15,6 +20,7 @@
 {% endif %}
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+{%- endblock styles %}
 {% endblock %}
 
 {% block navbar %}
@@ -76,7 +82,8 @@
     <div class="footer-copyright">
         <div class="container">
             © 2016 Gloomymoon
-            <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right" href="{{ url_for('english.help') }}"><i
+            <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right"
+               href="{{ url_for('english.help') }}"><i
                     class="material-icons">help_outline</i></a>
         </div>
     </div>
@@ -120,6 +127,7 @@ $(document).ready(function() {
     {% endfor %}
 
 });
+
 
 
 
