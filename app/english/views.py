@@ -191,7 +191,10 @@ def exercises():
 @english.route('/exercise/result/<int:id>')
 @login_required
 def exercise_result(id):
-    exercise = EnglishMyExercise.query.filter_by(id=id).first_or_404()
+    exercise = EnglishMyExercise.query.filter_by(id=id).one_or_none()
+    if not exercise or exercise.user_id != current_user.id:
+        flash('The exercise dose not exist.')
+        return redirect(url_for('english.exercises'))
     return render_template('english/exercise_result.html', exercise=exercise)
 
 
