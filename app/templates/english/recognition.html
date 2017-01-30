@@ -21,12 +21,14 @@
     <p class="center-align grey-text">duration: {{ (str(recognition.finish_dt - recognition.create_dt).split('.')[0])
         }}</p>
     {% else %}
+    {% if recognition.current > 0 %}
     <h2 class="center-align score">{{ recognition.current + 1}}</h2>
     <p class="center-align grey-text">total {{ recognition.total}}</p>
     <div class="center-align">
         <a href="{{ url_for('english.do_recognition') }}"
            class="btn btn-large waves-effect waves-light light-blue lighten-1">Continue</a>
     </div>
+    {% endif %}
     {% if len(current_user.english_words.all()) < recognition.total %}
     <p class="center-align grey-text">You do NOT have enough words to practise.<br/>
     <u><a href="{{ url_for('english.books') }}">Add a new book</a></u></p>
