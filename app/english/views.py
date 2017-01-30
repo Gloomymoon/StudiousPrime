@@ -181,7 +181,7 @@ def evaluate_exercise(id):
 @login_required
 def exercises():
     page = request.args.get('page', 1, type=int)
-    query = EnglishMyExercise.query
+    query = current_user.english_exercises
     pagination = query.order_by(EnglishMyExercise.finish_dt.desc()).paginate(
         page, per_page=current_app.config["EXERCISES_PER_PAGE"], error_out=False)
     exercises = pagination.items
