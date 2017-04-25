@@ -181,7 +181,7 @@ def evaluate_exercise(id):
 @login_required
 def exercises():
     page = request.args.get('page', 1, type=int)
-    query = EnglishMyExercise.query
+    query = current_user.english_exercises
     pagination = query.order_by(EnglishMyExercise.finish_dt.desc()).paginate(
         page, per_page=current_app.config["EXERCISES_PER_PAGE"], error_out=False)
     exercises = pagination.items
@@ -191,7 +191,10 @@ def exercises():
 @english.route('/exercise/result/<int:id>')
 @login_required
 def exercise_result(id):
-    exercise = EnglishMyExercise.query.filter_by(id=id).first_or_404()
+    exercise = EnglishMyExercise.query.filter_by(id=id).one_or_none()
+    if not exercise or exercise.user_id != current_user.id:
+        flash('The exercise dose not exist.')
+        return redirect(url_for('english.exercises'))
     return render_template('english/exercise_result.html', exercise=exercise)
 
 

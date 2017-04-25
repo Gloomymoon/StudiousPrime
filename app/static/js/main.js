@@ -13,6 +13,7 @@ function nextword(){
 $(document).ready(function() {
 
     $("#next").click(function(){nextword()});
+    /*
     $("#error_words li").click(function(){
         if ($(this).find(".material-icons").html() == 'arrow_drop_up'){
             $(this).find(".material-icons").html("arrow_drop_down");
@@ -21,6 +22,7 @@ $(document).ready(function() {
             $(this).find(".material-icons").html("arrow_drop_up");
         }
     })
+    */
     //nextword();
 
     var myChart = echarts.init(document.getElementById('summary'));

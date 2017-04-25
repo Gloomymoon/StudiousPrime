@@ -27,7 +27,7 @@ def get_exercise_summary():
     rows = []
     for r in result:
         rows.append({
-            'date': r['date'].strftime("%Y-%m-%d"),
+            'date': r['date'],
             'accuracy': "%.2f" % r['accuracy']
         })
     return jsonify({

@@ -36,11 +36,11 @@
     </div>
 
 </div>
-<div class="row valign-wrapper">
-    <span class="col s2 center-align">Take</span>
-    <a class="col s4 btn waves-effect waves-light light-blue lighten-3" href="{{ url_for('english.recognition') }}">Recognition</a>
-    <span class="col s2 center-align">or</span>
-    <a class="col s4 btn waves-effect waves-light light-blue" href="{{ url_for('english.exercises') }}">Exercises</a>
+<div class="row valign-wrapper" style="margin-bottom:1rem;">
+    <a class="col s5 btn waves-effect waves-light light-blue lighten-3" href="{{ url_for('english.recognition') }}"
+       style="width:49%;">Recognition</a>
+    <a class="col s5 btn waves-effect waves-light light-blue" href="{{ url_for('english.exercises') }}"
+       style="width:49%; margin-left: 2%">Exercises</a>
 </div>
 <ul id="error_words" class="card collapsible" data-collapsible="expandable">
     <li>
@@ -50,10 +50,10 @@
     {% for error_word in error_words %}
     <li class="">
         <div class="collapsible-header row"><span class="col s5">{{ error_word.word.english }}</span><span
-                class="col s5 grey-text">{{ error_word.word.chinese }}</span>
-            <span class="col s2 grey-text"><i class="material-icons center">arrow_drop_down</i></span></div>
-        <div class="collapsible-body grey lighten-4"><p class="grey-text"><span>{{ error_word.word.example }}</span>
-            <span class="right right-align">errors: {{ error_word.tested - error_word.passed }}</span></p></div>
+                class="col s5 grey-text right-align">{{ error_word.word.chinese }}</span>
+            <!--span class="col s2 grey-text"><i class="material-icons center">arrow_drop_down</i></span--></div>
+        <!--div class="collapsible-body grey lighten-4"><p class="grey-text"><span>{{ error_word.word.example }}</span>
+            <span class="right right-align">errors: {{ error_word.tested - error_word.passed }}</span></p></div-->
     </li>
     {% endfor %}
     {% else %}

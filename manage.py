@@ -36,6 +36,7 @@ if __name__ == '__main__':
     manager.run()
 
 
+
 def add_book(title, description="", image="images/english/default.png"):
     b = EnglishBook.query.filter(EnglishBook.title == title).first()
     if not b:

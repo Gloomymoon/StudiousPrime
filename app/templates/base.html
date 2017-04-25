@@ -1,10 +1,11 @@
 {% extends "material/base.html" %}
-
-{% block title %}Studious Prime{% endblock %}
-
 {% block head %}
+<title>{% block title %}Studious Prime{% endblock title %}</title>
+{%- block metas %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{%- endblock metas %}
+{%- block styles %}
 {% if current_app.config["CSS_SERVE_LOCAL"] %}
-{{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons.css') }}">
 {% else %}
@@ -15,8 +16,8 @@
 {% endif %}
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+{%- endblock styles %}
 {% endblock %}
-
 {% block navbar %}
 <header>
     <nav class="light-blue lighten-1 {% block nav_class %}{% endblock %}" role="navigation">
@@ -31,10 +32,6 @@
             <ul class="side-nav" id="slide-out">
                 <li>
                     <div class="userView light-blue lighten-1">
-                        <!-- div class="background">
-                            <img src="images/office.jpg">
-                        </div>
-                        <a href="#!user"><img class="circle" src="images/yuna.jpg"></a -->
                         <a href="#!name"><span class="white-text name">
                         {% if current_user %}{{ current_user.name }}{% else %}Guest{% endif %}
                     </span></a>
@@ -49,34 +46,23 @@
         </div>
     </nav>
     {% block flash_content %}
-    <!--
-{% for message in get_flashed_messages() %}
-<div class="alert alert-warning text-center">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
-</div>
-{% endfor %}
--->
     {% endblock %}
 </header>
 {% endblock %}
-
 {% block content %}
-
 <main>
     <div class="container">
         {% block page_content %}{% endblock %}
     </div>
 </main>
 {% endblock %}
-
-
 {% block footer %}
 <footer class="page-footer light-blue lighten-1">
     <div class="footer-copyright">
         <div class="container">
             © 2016 Gloomymoon
-            <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right" href="{{ url_for('english.help') }}"><i
+            <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right"
+               href="{{ url_for('english.help') }}"><i
                     class="material-icons">help_outline</i></a>
         </div>
     </div>
@@ -120,9 +106,5 @@ $(document).ready(function() {
     {% endfor %}
 
 });
-
-
-
-
 </script>
 {% endblock %}
