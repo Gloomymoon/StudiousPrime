@@ -36,7 +36,6 @@ if __name__ == '__main__':
     manager.run()
 
 
-
 def add_book(title, description="", image="images/english/default.png"):
     b = EnglishBook.query.filter(EnglishBook.title == title).first()
     if not b:
@@ -156,3 +155,8 @@ def init_app_data():
         db.session.add(w)
         db.session.commit()
     '''
+
+
+def add_new_book():
+    add_book("Oxford 3B", "Oxford 3B")
+    import_words("Oxford3B.csv")
