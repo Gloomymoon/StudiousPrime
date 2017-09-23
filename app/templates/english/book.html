@@ -5,7 +5,7 @@
 {% if mybook %}
 <a href="{{ url_for('english.books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My Books</a>
 {% else %}
-<a href="{{ url_for('english.books', _anchor='new_books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>My
+<a href="{{ url_for('english.books', _anchor='new_books') }}" class="brand-logo"><i class="material-icons">keyboard_backspace</i>New
     Books</a>
 {% endif %}
 {% endblock %}
@@ -113,16 +113,6 @@ $(document).ready(function() {
         }
     });
 });
-
-
-
-
-
-
-
-
-
-
 
 </script>
 {% endblock %}

@@ -5,7 +5,10 @@ from flask_login import login_required, current_user
 from sqlalchemy import and_, not_
 from . import english
 from app import db
-from .forms import NewWordForm, EditWordForm, QuestionForm, LevelSettingForm, RecognitionForm
+from app.main.const import Permission
+from app.main.decorators import permission_required
+from .forms import NewWordForm, EditWordForm, QuestionForm, LevelSettingForm, \
+    RecognitionForm, NewBookForm, EditBookForm, NewLessonForm
 from .models import EnglishWord, EnglishMyWord, EnglishMyExercise, EnglishBook, \
     EnglishSetting, EnglishMyBook, EnglishLesson, EnglishRecognition
 
@@ -21,23 +24,57 @@ def index():
     return render_template('english/index.html', error_words=error_words, newword=newword)
 
 
-@english.route('/add-word', methods=['GET', 'POST'])
+@english.route('/book/<int:book_id>/add-lesson', methods=['GET', 'POST'])
 @login_required
-def add_word():
+@permission_required(Permission.ADMINISTER)
+def add_lesson(book_id):
+    back_href = request.args.get('back', '', type=str)
+    if not back_href and book_id:
+        back_href = url_for('english.edit_book', id=book_id)
+    book = EnglishBook.query.filter_by(id=book_id).first_or_404()
+    max_ln = 0
+    if len(book.lessons) > 0:
+        max_ln = max([lesson.number for lesson in book.lessons])
+    form = NewLessonForm()
+    if form.validate_on_submit():
+        lesson = EnglishLesson()
+        lesson.book = book
+        lesson.number = form.number.data
+        lesson.title = form.title.data
+        db.session.add(lesson)
+        db.session.commit()
+        return redirect(back_href)
+    form.book_id = book_id
+    form.number.data = max_ln + 1
+    return render_template('english/add_lesson.html', form=form, book=book, back_href=back_href)
+
+
+@english.route('/book/<int:book_id>/add-word', methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.ADMINISTER)
+def add_word(book_id):
     back_href = request.args.get('back', '', type=str)
     if not back_href:
-        back_href = url_for('english.words')
+        back_href = url_for('english.edit_book', id=book_id)
+    book = EnglishBook.query.filter_by(id=book_id).first_or_404()
+    if len(book.lessons) <= 0:
+        return redirect(url_for('english.add_lesson', book_id=book.id))
     form = NewWordForm()
+    form.book_id.data = book_id
+    form.book_title.data = book.title
+    form.init_lesson(book_id)
     if form.validate_on_submit():
         word = EnglishWord.query.filter_by(english=form.english.data).first()
         if not word:
             word = EnglishWord()
-            #word.book = EnglishBook.query.get(form.book.data)
+            word.lesson_id = form.lesson_title.data
             word.english = form.english.data
             word.chinese = form.chinese.data
             word.example = form.example.data
+            word.create = datetime.utcnow()
             db.session.add(word)
             db.session.commit()
+        '''    
         ws = EnglishMyWord.query.filter_by(word_id=word.id).filter_by(user_id=current_user.id).first()
         if not ws:
             ws = EnglishMyWord(word_id=word.id, user_id=current_user.id)
@@ -46,18 +83,27 @@ def add_word():
             flash('New word [' + word.english + '] has been added.')
         else:
             flash('Word [' + word.english + '] already added.')
-    return render_template('english/add_word.html', form=form, back_href=back_href)
+        '''
+        return redirect(back_href)
+    return render_template('english/add_word.html', form=form, book=book, back_href=back_href)
 
 
 @english.route('/word/<int:id>', methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.ADMINISTER)
 def edit_word(id):
     back_href = request.args.get('back', '', type=str)
     if not back_href:
         back_href = url_for('english.words')
     form = EditWordForm()
     word = EnglishWord.query.filter_by(id=id).first_or_404()
+    if word:
+        form.init_lesson(word.lesson.book_id)
+    form.id.data = id
+    form.book_id.data = word.lesson.book_id
+    form.book_title.data = word.lesson.book.title
     if form.validate_on_submit():
+        word.lesson_id = form.lesson_title.data
         word.english = form.english.data
         word.chinese = form.chinese.data
         word.example = form.example.data
@@ -66,6 +112,7 @@ def edit_word(id):
         db.session.commit()
         flash('Word [' + word.english + '] has been updated.')
         return redirect(back_href)
+    form.lesson_title.data = word.lesson.id
     form.english.data = word.english
     form.chinese.data = word.chinese
     form.example.data = word.example
@@ -266,11 +313,49 @@ def settings():
 def books():
     mybooks = current_user.english_books
     books = EnglishBook.query.filter(not_(EnglishBook.id.in_([x.book_id for x in mybooks]))).order_by(EnglishBook.id).all()
-    return render_template("english/books.html", mybooks=mybooks, books=books)
+    allbooks = EnglishBook.query.order_by(EnglishBook.id).all()
+    return render_template("english/books.html", mybooks=mybooks, books=books, allbooks=allbooks)
+
+
+@english.route("/edit-book/<int:id>", methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.ADMINISTER)
+def edit_book(id):
+    #back_href = request.args.get('back', '', type=str)
+    book = EnglishBook.query.filter(EnglishBook.id == id).first_or_404()
+    form = EditBookForm()
+    if form.validate_on_submit():
+        book.title = form.name.data
+        book.description = form.description.data
+        db.session.add(book)
+        db.session.commit()
+        flash('Book information saved.')
+    form.id.data = book.id
+    form.name.data = book.title
+    form.description.data = book.description
+    return render_template("english/edit_book.html", book=book, form=form)
+
+
+@english.route("/create-book/", methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.ADMINISTER)
+def create_book():
+    #back_href = request.args.get('back', '', type=str)
+    form = NewBookForm()
+    if form.validate_on_submit():
+        book = EnglishBook()
+        book.title = form.name.data
+        book.description = form.description.data
+        book.image = '''images/english/default.png'''
+        db.session.add(book)
+        db.session.commit()
+        return redirect(url_for('english.edit_book', id=book.id))
+    return render_template("english/create_book.html", form=form)
 
 
 @english.route("/add-book/<int:id>")
 @login_required
+@permission_required(Permission.ADMINISTER)
 def add_book(id):
     mybooks = [x for x in current_user.english_books if x.book_id == id]
     if mybooks and mybooks[0]:

@@ -9,9 +9,13 @@
 <ul class="tabs tabs-transparent">
     <li class="tab"><a class="active" href="#my_books">My books</a></li>
     <li class="tab"><a href="#new_books">New books</a></li>
-    <li class="tab"><a href="#search"><i class="material-icons">search</i></a></li>
-</ul>
+{% if current_user.is_administrator() %}
+    <li class="tab"><a href="#manage_books">Manage</a></li>
+    <!-- li class="tab"><a href="#search"><i class="material-icons">search</i></a></li -->
+    {% endif %}
 {% endblock %}
+</ul>
+
 
 {% block page_content %}
 <div id="my_books" class="col s12" style="display: none;">
@@ -31,7 +35,7 @@
                         <p class="">{{ mybook.book.description }}</p>
                     </div>
                     <div class="card-action center-align">
-                        <a class="btn btn-flat waves-effect waves-light"
+                        <a class="btn btn-flat waves-effect waves-light col s12"
                            href="{{ url_for('english.view_book', id=mybook.book_id)}}">View this
                             book</a>
                     </div>
@@ -61,16 +65,10 @@
                     </div>
 
                     <div class="card-action center-align">
-                        <span>
-                            <a class="btn btn-flat waves-effect waves-light"
+                            <a class="btn btn-flat waves-effect waves-light col s6 btn-border-right"
                                href="{{ url_for('english.view_book', id=book.id)}}">View</a>
-                        </span>
-                        <span>
-                            <a href="#" class="btn btn-flat v-line"></a></span>
-                        <span>
-                            <a class="btn btn-flat waves-effect waves-light"
+                            <a class="btn btn-flat waves-effect waves-light col s6"
                                href="{{ url_for('english.add_book', id=book.id)}}">Add</a>
-                        </span>
                     </div>
                 </div>
             </div>
@@ -80,6 +78,41 @@
         </div>
     </div>
 </div>
+{% if current_user.is_administrator() %}
+<div id="manage_books" class="col s12" style="display:none;">
+    <div class="section">
+        <div class="row">
+            <a class="" href="{{ url_for('english.create_book')}}"><div class="col s12 l5 horizontal grid-book drop-box valign-wrapper">
+                <h5 class="col s12 valign-wrapper"><i class="material-icons md-36">add</i> Create a new book</h5>
+            </div></a>
+            <div class="col l1"></div>
+            {% if allbooks %}
+            {% for book in allbooks %}
+            <div class="col s12 l5 card horizontal hoverable grid-book">
+                <div class="card-image waves-effect waves-light">
+                    {% if book.image %}
+                    <image class="activator" src="{{ url_for('static', filename=book.image) }}"></image>
+                    {% endif %}
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">{{ book.title }}</span>
+                        <p class="">{{ book.description }}</p>
+                    </div>
+
+                    <div class="card-action center-align">
+                        <a class="btn btn-flat waves-effect waves-light col s12"
+                           href="{{ url_for('english.edit_book', id=book.id)}}">Edit</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col l1"></div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
 <div id="search" class="col s12" style="display: none;">
     <div class="section">
         Coming soon...
@@ -89,7 +122,7 @@
 
 {% block scripts %}
 {{ super() }}
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
     var anchor = $(location).attr('hash');
     if (anchor==''){
@@ -100,9 +133,12 @@ $(document).ready(function(){
     }
     catch(err) {
     }
+    /*
+    $("#tab_manage_books").click(function(){
+        window.location.href = "{{ url_for('english.books', _anchor='manage_books') }}";
+    });
+    */
 });
-
-
 
 </script>
 {% endblock %}

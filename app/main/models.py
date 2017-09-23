@@ -4,14 +4,8 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from app import db, login_manager
+from const import Permission
 from app.english.models import EnglishMyWord
-
-
-class Permission:
-    VIEW = 0x01
-    PRACTISE = 0x02
-    MANAGE = 0x04   # Add books and change exercise settings
-    ADMINISTER = 0x80
 
 
 class Role(db.Model):

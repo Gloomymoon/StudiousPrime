@@ -1,0 +1,89 @@
+{% extends "english/base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Edit Book{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.books', _anchor='manage_books') }}" class=""><i class="material-icons back-button">arrow_back</i></a>EDIT BOOK
+{% endblock %}
+{% block page_content %}
+<div id="create_books" class="col s12">
+    <div class="section">
+        <div class="row">
+            <form class="col m6 offset-m3" method="post" id="create_book_form">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">book</i>
+                        {{ form.name(class="validate") }}
+                        {{ form.name.label() }}
+                        {% if form.errors and form.errors['name'] %}
+                        <p class="red-text error-info">{{ form.errors['name'][0] }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix"></i>
+                        {{ form.description(class="materialize-textarea") }}
+                        {{ form.description.label() }}
+                        {% if form.errors and form.errors['description'] %}
+                        <p class="red-text error-info">{{ form.errors['description'][0] }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12 center">
+                        {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
+                        <a href="{{ url_for('english.books', _anchor='manage_books') }}" class="waves-effect waves-light btn-flat ">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+                <hr />
+    <div class="section">
+        {% if book %}
+                <div class="row">
+                    <a class="col s5 waves-effect waves-light btn light-blue lighten-1" style="width:49%;"
+                       href="{{ url_for('english.add_word', book_id=book.id) }}">New word</a>
+                    <a class="col s5 waves-effect waves-light btn light-blue lighten-3" style="width:49%;margin-left:2%;"
+                       href="{{ url_for('english.add_lesson', book_id=book.id) }}">New lesson</a>
+                </div>
+        <table class="striped highlight">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Lesson</th>
+                <th>English</th>
+                <th>Chinese</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for word in book.get_words() %}
+            <tr class="grey-text text-darken-2" data-href="{{ url_for('.edit_word', id=word.id) }}">
+                <td>{{ word.id }}</td>
+                <td>{{ word.lesson.title }}</td>
+                <td>{{ word.english }}</td>
+                <td>{{ word.chinese }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+            {% endif %}
+    </div>
+    {% if book and pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, '.words', book=book.id, lesson=lesson.number, fragment='#words') }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+    $("tbody tr").click(function(){
+        location.href = $(this).data("href") + "?back=" + encodeURIComponent(location.pathname);
+    });
+});
+</script>
+{% endblock %}

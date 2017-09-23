@@ -3,23 +3,83 @@ from wtforms import StringField, SubmitField, TextAreaField, SelectField, Intege
 from wtforms.validators import Required
 from wtforms import ValidationError
 from wtforms_components import read_only
-from .models import EnglishWord, EnglishBook
+from .models import EnglishWord, EnglishBook, EnglishLesson
+
+
+class NewBookForm(FlaskForm):
+    name = StringField('Book Name', validators=[Required()])
+    description = TextAreaField('Description')
+    cover = StringField('Cover Picture')
+    submit = SubmitField('Create')
+
+    def __int__(self, *args, **kwargs):
+        super(NewBookForm, self).__init__(*args, **kwargs)
+
+    def validate_name(self, field):
+        if EnglishBook.query.filter_by(title=field.data).first():
+            raise ValidationError('Title [' + field.data + '] has already been used.')
+
+
+class EditBookForm(FlaskForm):
+    id = HiddenField()
+    name = StringField('Book Name')
+    description = TextAreaField('Description')
+    cover = StringField('Cover Picture')
+    submit = SubmitField('Save')
+
+    def __int__(self, *args, **kwargs):
+        super(EditBookForm, self).__init__(*args, **kwargs)
+        #read_only(self.name)
+        
+    def validate_name(self, field):
+        if EnglishBook.query.filter(EnglishBook.title == field.data, EnglishBook.id != self.id.data).first():
+            raise ValidationError('Title [' + field.data + '] has already been used.')
+
+
+class NewLessonForm(FlaskForm):
+    book_id = HiddenField()
+    number = StringField('#')
+    title = StringField('Lesson', validators=[Required()])
+    submit = SubmitField('Create')
+
+    def __init__(self, *args, **kwargs):
+        super(NewLessonForm, self).__init__(*args, **kwargs)
+        read_only(self.number)
 
 
 class NewWordForm(FlaskForm):
+    book_id = HiddenField()
+    book_title = StringField('Book')
+    lesson_title = SelectField('Lesson', coerce=int, validators=[Required()])
     english = StringField('English', validators=[Required()])
     chinese = StringField('Chinese', validators=[Required()])
     example = TextAreaField('Example')
-    #books = SelectMultipleField('Books', coerce=int)
     submit = SubmitField('Submit')
 
     def __init__(self, *args, **kwargs):
         super(NewWordForm, self).__init__(*args, **kwargs)
+        read_only(self.book_title)
+        self.lesson_title.choices = []
         #self.books.choices = [(book.id, book.name) for book in EnglishBook.query.order_by(EnglishBook.id).all()]
+
+    def init_lesson(self, book_id):
+        book = EnglishBook.query.filter_by(id=book_id).first_or_404()
+        if book:
+            self.lesson_title.choices = [(lesson.id, lesson.title) for lesson in book.lessons]
+
+    def validate_english(self, field):
+        b = EnglishBook.query.filter_by(id=self.book_id.data).one_or_none()
+        w = [word for word in b.get_words() if word.english == field.data]
+        if len(w) >= 1:
+            raise ValidationError('[' + field.data + '] already existed in this book.')
 
 
 class EditWordForm(FlaskForm):
     #books = SelectField('Books', coerce=int)
+    id = HiddenField()
+    book_id = HiddenField()
+    book_title = StringField('Book')
+    lesson_title = SelectField('Lesson', coerce=int)
     english = StringField('English', validators=[Required()])
     chinese = StringField('Chinese', validators=[Required()])
     example = TextAreaField('Example')
@@ -27,13 +87,20 @@ class EditWordForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(EditWordForm, self).__init__(*args, **kwargs)
-        #read_only(self.books)
+        read_only(self.book_title)
+        self.lesson_title.choices = []
         #self.books.choices = [(book.id, book.name) for book in EnglishBook.query.order_by(EnglishBook.id).all()]
 
+    def init_lesson(self, book_id):
+        book = EnglishBook.query.filter_by(id=book_id).first_or_404()
+        if book:
+            self.lesson_title.choices = [(lesson.id, lesson.title) for lesson in book.lessons]
+
     def validate_english(self, field):
-        w = EnglishWord.query.filter_by(english=field.data).all()
-        if len(w) > 1:
-            raise ValidationError('English word [' + field.data + '] already existed.')
+        b = EnglishBook.query.filter_by(id=self.book_id.data).one_or_none()
+        w = [word for word in b.get_words() if word.english == field.data and word.id != self.id.data]
+        if len(w) >= 1:
+            raise ValidationError('[' + field.data + '] already existed in this book.')
 
 
 class QuestionForm(FlaskForm):

@@ -44,6 +44,11 @@ class EnglishBook(db.Model):
             result.append({"lesson": row[0], "count": row[1]})
         return result
     '''
+    def get_words(self):
+        if self.lessons:
+            return reduce(lambda x, y: x + y, map(lambda x: x.words, self.lessons))
+        else:
+            return []
 
 
 class EnglishMyBook(db.Model):
@@ -143,6 +148,10 @@ class EnglishWord(db.Model):
     mywords = db.relationship('EnglishMyWord', back_populates='word')
     #book = db.relationship('EnglishBook', back_populates="words")
     lesson = db.relationship('EnglishLesson', back_populates="words")
+
+    def get_book(self):
+        book = EnglishBook.query.filter_by(id=self.lesson.book_id).first()
+        return book
 
 
 class EnglishMyWord(db.Model):

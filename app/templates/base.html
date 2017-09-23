@@ -34,7 +34,7 @@
                     <div class="userView light-blue lighten-1">
                         <a href="#!name"><span class="white-text name">
                         {% if current_user %}{{ current_user.name }}{% else %}Guest{% endif %}
-                    </span></a>
+                        </span></a>
                         {% if current_user %}
                         <a href="#!email"><span class="white-text email">{{ current_user.email }}</span></a>
                         {% endif %}
@@ -60,7 +60,7 @@
 <footer class="page-footer light-blue lighten-1">
     <div class="footer-copyright">
         <div class="container">
-            © 2016 Gloomymoon
+            © 2016 - 2017  Gloomymoon
             <a class="btn-flat btn-floating waves-effect waves-light light-blue lighten-1 right"
                href="{{ url_for('english.help') }}"><i
                     class="material-icons">help_outline</i></a>

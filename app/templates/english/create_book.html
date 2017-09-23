@@ -1,0 +1,58 @@
+{% extends "english/base.html" %}
+
+{% block title %}Manage Books{% endblock %}
+{% block navbar_title %}
+<a href="{{ url_for('english.books', _anchor='manage_books') }}" class=""><i class="material-icons back-button">arrow_back</i></a>CREATE BOOK
+{% endblock %}
+
+{% block page_content %}
+<div id="create_books" class="col s12">
+    <div class="section">
+        <div class="row">
+            <form class="col m6 offset-m3" method="post" id="create_book_form">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">book</i>
+                        {{ form.name(class="validate") }}
+                        {{ form.name.label() }}
+                        {% if form.errors and form.errors['name'] %}
+                        <p class="red-text error-info">{{ form.errors['name'][0] }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix"></i>
+                        {{ form.description(class="materialize-textarea") }}
+                        {{ form.description.label() }}
+                        {% if form.errors and form.errors['description'] %}
+                        <p class="red-text error-info">{{ form.errors['description'][0] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
+                        <a href="{{ url_for('english.books', _anchor='manage_books') }}" class="waves-effect waves-light btn-flat ">Cancel</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function(){
+
+});
+
+
+
+
+
+</script>
+{% endblock %}

@@ -1,24 +1,64 @@
 {% extends "english/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Add New Word{% endblock %}
-
+{% block navbar_title %}
+<a href="{{ back_href }}" class=""><i class="material-icons back-button">arrow_back</i></a>ADD WORD
+{% endblock %}
 {% block page_content %}
-<div class="col-md-6">
-    <div class="page-header">
-        <h3>Add New Word
-            <span class="pull-right">
-            <a href="{{  back_href }}" class="btn btn-default" role="button">
-                <span class="glyphicon glyphicon-arrow-left"></span>
-                Back
-            </a>
-        </span>
-        </h3>
+<div id="edit_word" class="col s12">
+    <div class="section">
+        <div class="row">
+            <form class="col m6 offset-m3" method="post" id="create_book_form">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="input-field col s12">
+                        {{ form.book_title(class="validate") }}
+                        {{ form.book_title.label() }}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.lesson_title() }}
+                        {{ form.lesson_title.label() }}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.english(class="validate") }}
+                        {{ form.english.label() }}
+                        {% if form.errors and form.errors['english'] %}
+                        <p class="red-text error-info">{{ form.errors['english'][0] }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.chinese(class="validate") }}
+                        {{ form.chinese.label() }}
+                        {% if form.errors and form.errors['chinese'] %}
+                        <p class="red-text error-info">{{ form.errors['chinese'][0] }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.example(class="materialize-textarea") }}
+                        {{ form.example.label() }}
+                        {% if form.errors and form.errors['example'] %}
+                        <p class="red-text error-info">{{ form.errors['example'][0] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
+                        <a href="{{ back_href }}" class="waves-effect waves-light btn-flat ">Cancel</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
     </div>
-    {{ wtf.quick_form(form, button_map={'submit':'primary'}) }}
 </div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
+<script>
+$(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
 {% endblock %}

@@ -1,0 +1,69 @@
+{% extends "english/base.html" %}
+
+{% block title %}Add Lesson{% endblock %}
+{% block navbar_title %}
+<a href="{{ back_href }}" class=""><i class="material-icons back-button">arrow_back</i></a>ADD LESSON
+{% endblock %}
+{% block page_content %}
+<div id="edit_lesson" class="col s12">
+    <div class="section">
+        <div class="row">
+            <form class="col m6 offset-m3" method="post" id="add_lesson_form">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="input-field col s12">
+                        {{ form.number(class="validate") }}
+                        {{ form.number.label() }}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.title() }}
+                        {{ form.title.label() }}
+                        {% if form.errors and form.errors['title'] %}
+                        <p class="red-text error-info">{{ form.errors['title'][0] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        {{ form.submit(class="waves-effect waves-light btn light-blue lighten-1") }}
+                        <a href="{{ back_href }}" class="waves-effect waves-light btn-flat ">Cancel</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+                <hr />
+    <div class="section">
+        {% if book %}
+        <h5>Lessons in this book:</h5>
+        <table class="striped highlight">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Lesson</th>
+                <th>Words</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lesson in book.lessons %}
+            <tr class="grey-text text-darken-2" data-href="#">
+                <td>{{ lesson.number }}</td>
+                <td>{{ lesson.title }}</td>
+                <td>{{ len(lesson.words) }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+  });
+</script>
+{% endblock %}

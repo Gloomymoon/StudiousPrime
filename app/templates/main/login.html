@@ -11,6 +11,7 @@
         {{ form.hidden_tag() }}
         <div class="row">
             <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
                 {{ form.username(class="validate") }}
                 {{ form.username.label() }}
                 {% if form.errors and form.errors['username'] %}
@@ -19,6 +20,7 @@
             </div>
 
             <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
                 {{ form.password(class="validate") }}
                 {{ form.password.label() }}
                 {% if form.errors and form.errors['password'] %}
